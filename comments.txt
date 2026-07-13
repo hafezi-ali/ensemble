@@ -1,0 +1,110 @@
+Skip to Main Content
+IEEE Author Portal
+Decision letter (Initial Submission)
+Review of manuscript TETCI-2024-1262
+
+25-Apr-2025
+
+TETCI-2024-1262
+Density-Based Dynamic Ensemble Learning with Gaussian Mixture Model for Enhanced Predictive Analytics.
+I regret to inform you that based on the recommendation received from the associate editor your paper cannot be accepted in the IEEE Transactions on Emerging Topics in Computational Intelligence. You are encouraged to look for other publications in which this work may be better suited to appear, as it is no longer under consideration by this journal.
+
+Please find review comments below that should help explain the reasoning behind this decision. I hope you find them useful. If the referees have attached a review file, you will need to retrieve it from your 'Author Center'.
+--------
+If you originally submitted via the IEEE Author Portal, please find it here: 
+https://ieee.atyponrex.com/journal/tetci-ieee
+If you originally submitted via ScholarOne Manuscripts, please find it here: 
+https://mc.manuscriptcentral.com/tetci-ieee
+--------
+
+************ Associate Editor Comments for Authors: ************
+Associate Editor
+Comments to the Author:
+All the reviewers pointed out very critical comments on this work, the authors are suggested to enhance their work accordingly.
+
+
+Based on the referee reports, and the Associate Editor's recommendation, I must reject your manuscript. Thank you for your interest in the IEEE Transactions on Emerging Topics in Computational Intelligence.
+
+
+
+*************** Reviews ***************
+
+Referee: 1
+
+Comments to the Author
+This paper proposes a novel Density-Based Dynamic Ensemble Learning Algorithm using Gaussian Mixture Models (GMM) to address the challenges of high-dimensional spaces and label noise sensitivity. The authors use GMM for clustering, as it effectively captures the underlying structure of the data. Additionally, they employ a density-based dynamic selection strategy to intelligently select classifiers for each test instance based on its proximity to these clustered subsets, enhancing accuracy and adaptability.
+
+The authors need to check the following items to improve the paper:
+
+*1. In the introduction section, before mentioning their contribution, the authors should have provided a recap of whether and how Dynamic Ensemble Selection methods address the challenges of high-dimensional spaces and label noise sensitivity, as well as their limitations.
+
+*2. At the end of the introduction, the authors should briefly outline the paper's structure and its main sections.
+
+*3. In the section “II. Literature Review”, specifically at the end of section “A. Ensemble Learning and Dynamic Ensemble Selection”, the authors conclude the section with: “These methods show
+the potential of integrating advanced ensemble techniques within deep learning frameworks. This method shows the potential of integrating clustering-based techniques within deep learning frameworks.'” It would have been better to finish discussing the last method before providing a recap that addresses all the methods.
+
+*4. In the section “II. Literature Review/D. Dynamic Classifier Selection Techniques”, the authors use the abbreviation (DSOC) without defining what it stands for. They should present the meaning of each abbreviation upon its first appearance.
+
+*5. In the section “II. Literature Review/E. Recent Advancements and Challenges”, the authors begin the sentence with the reference number [24]. They should instead start the sentence with “Guo et al.” They should follow this approach whenever a reference appears at the beginning of a sentence.
+
+*6. The authors should add the positioning relative to related work, the challenges addressed by the approach, a highlight of the differences from other state-of-the-art methods, and an underscoring of the contribution of the approach to the Literature Review section.
+
+*7. The authors should not discuss the differences with other state-of-the-art methods in the section “III. Methodology/A. The Proposed DDELA-GMM Framework”. This section should focus on explaining the proposed DDELA-GMM framework, not revisiting the positioning relative to related work.
+
+* 8. The authors should ensure there are no typos, such as “compete9nce”, in the section “III. Methodology/A. The Proposed DDELA-GMM Framework” .
+
+# 9. Figure 1 should present GMM, as it is responsible for sampling.
+
+* 10. In the section “IV. Results and Discussion”, the authors should define the four ensemble methods that will be compared.
+
+*11. Table 1 should be placed where it is referenced.
+
+*12. The authors should place the lessons learned at the end of the section “IV. Results and Discussion/A. Ensemble Method Performance Analysis”.
+
+*13. Figure 3 and Figure 4 should switch places, as Figure 4 is discussed before Figure 3.
+
+*14. The authors should mention the metrics that will be used to assess the four ensemble methods at the beginning of the section “IV. Results and Discussion”, before delving into the results analysis.
+
+* 16. Although the section “IV. Results and Discussion” presents a number of experiments, it still lacks further comparison with state-of-the-art methods mentioned in the Literature Review section, to empirically validate that the proposed approach does not suffer from those challenges.
+
+* 17. This paper lacks an important section: the conclusion. It should be added.
+
+This paper is interesting and valuable, but major revisions are necessary. Please carefully revise my comments.
+
+Referee: 2
+
+Comments to the Author
+The paper presents a density-based dynamic ensemble learning algorithm using Gaussian Mixture Models (GMM) for enhanced predictive analytics. The paper lacks significant methodological innovation and fails to provide a comprehensive comparison with state-of-the-art ensemble learning methods. Additionally, the writing is often unclear and repetitive, making it difficult to follow the authors' contributions. My specific comments are as follows.
+
+* 1. The abstract claims that the proposed method is a significant advancement in handling complex, high-dimensional data. However, it is unclear what specific techniques are employed to address high-dimensionality.
+
+* 2. The paper mentions dynamic environments but does not clearly define or simulate such conditions. The authors should reference and incorporate concepts from data stream learning, particularly concept drift, to better demonstrate the algorithm's adaptability in dynamic settings.
+
+* 3. The proposed model is referred to as "Density-Based Dynamic Ensemble Learning Using Algorithm Gaussian Mixture Model (DDELA-GMM)." This naming is awkward and potentially incorrect. The authors should revise the name for clarity and consistency.
+
+* 4. The experiments do not simulate environmental changes that could affect data distribution over time. The authors should design experiments that reflect real-world scenarios where data evolves, such as concept drift, to validate the algorithm's robustness.
+
+* 5. The sentence "This method shows the potential of integrating clustering-based techniques within deep learning frameworks" is ambiguous. It is unclear which method is being referred to.
+
+* 6. The literature review is poorly organized, with sections like "Fuzzy Min–Max Neural Networks" appearing irrelevant to the main contribution. Additionally, Section II.E repeats previously discussed content.
+
+*‌ 7. The experiments lack a thorough comparison with advanced ensemble learning algorithms. The authors should include comparisons with state-of-the-art methods, particularly those designed for dynamic and high-dimensional data, to better demonstrate the proposed method's advantages.
+
+*‌ 8. The authors claim that the proposed method is designed for high-dimensional data, yet GMMs are known to be inefficient in such settings.
+
+Referee: 3
+
+Comments to the Author
+Following are my comments to the authors
+# 1. The presented technique for creating the ensemble relies on GMM based clustering followed by the the weight assigned to each classifier at the time of testing. Therefore, to prove its distinction several experiments must be added before this work can be submitted for publication. These experiments must include i) self comparison if simple clustering algorithms are used instead of GMM ii) and more importantly, comparison with state-of-the-art techniques be done in order to see if the proposed method has any interesting distinction from the competing methods.
+
+# ii) A detailed comparison without clustering must also be included in order to see if the weight assignment has any advantage over classic ensemble learning techniques like bagging and boosting.
+
+# iii) Description of the GMM based clustering algorithm is unnecessarily included as all standard algorithms must be referred instead of presenting the entire technique.
+
+# ii# i) All the limitations of existing methods, that have been addressed by the present research, must be justified with significant evidence in the results part as well as theoretically(is possible)
+
+# iv)The results and discussion section better be significantly enhanced by describing why each experiment was designed/performed followed by a detailed analysis of results obtained and insights gained.
+
+# v)Addition of a real case study in the suggested domain(s) e.g. medical might enhance the possibility of acceptance
+
