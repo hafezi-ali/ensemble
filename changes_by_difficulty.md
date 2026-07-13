@@ -7,7 +7,7 @@ required by R1#16, R2#7, and R3#1.
 ## Tier 1 — Trivial (minutes, pure text)
 1. "compete9nce" typo (R1#8) — already fixed; confirm none remain.
 2. Rename DDELA-GMM -> DDEL-GMM (R2#3) — already done in .tex.
-3. Reference-as-sentence-subject -> "Guo et al." style (R1#5) — one leftover: "B. et al." line 116.
+3. Reference-as-sentence-subject -> "Guo et al." style (R1#5) — one leftover: "B. et al." line 109 (fixed -> "Sowkarthika et al.").
 4. Define "DSOC" on first use (R1#4) — already done.
 5. Fix ambiguous "This method shows the potential..." sentence (R2#5 / R1#3) — delete dangling recap.
 
