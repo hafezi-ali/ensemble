@@ -21,6 +21,16 @@
 
 \definecolor{deleteRed}{rgb}{0.8, 0, 0} % A noticeable red
 \newcommand{\markfordelete}[1]{\textcolor{deleteRed}{#1}}
+
+% --- Tier 2 revision tracking (this duplicate only) ---
+\usepackage{soul}
+\definecolor{tier2bg}{rgb}{1.0, 0.85, 0.4}   % amber highlighter for Tier 2 changes
+\definecolor{tier2note}{rgb}{0.75, 0.35, 0.0} % darker amber for margin comments
+\sethlcolor{tier2bg}
+% \tchange{changed/added text}{short comment}
+\newcommand{\tchange}[2]{\hl{#1}\,\textcolor{tier2note}{\footnotesize[\textbf{T2:} #2]}}
+% \tnote{comment} — standalone note for structural/deletion changes with no visible text
+\newcommand{\tnote}[1]{\textcolor{tier2note}{\footnotesize[\textbf{T2 change:} #1]}}
 % Alternative: Just red, no strikethrough
 % \newcommand{\markfordelete}[1]{\textcolor{deleteRed}{#1}}
 %
@@ -43,7 +53,7 @@
 	\maketitle
 	\begin{abstract}
 		 Dynamic ensemble learning is a powerful technique for enhancing predictive accuracy and robustness by combining multiple classifiers. However, traditional methods face challenges in providing personalized predictions and balancing classifier diversity with ensemble generalization.
-		 This paper introduces a novel Density-Based Dynamic Ensemble Learning Algorithm using Gaussian Mixture Models to address these issues. The proposed algorithm leverages Gaussian Mixture Models to capture complex data structures, creating subsets that reflect specific patterns, which are then used to train distinct base classifiers, ensuring diversity within the ensemble. The density-based dynamic selection strategy intelligently selects classifiers for each test instance based on its proximity to these clustered subsets, enhancing accuracy and adaptability. Principal Component Analysis is applied as a preprocessing step, with 157 principal components retaining 95\% of the variance to keep clustering tractable in the high-dimensional feature space. The algorithm is evaluated against single ensemble methods as well as other dynamic ensemble methods to assess its performance and effectiveness, using logistic regression, support vector machine, k-nearest neighbors, and decision tree as base learners. Results demonstrate that the proposed method, particularly when combined with logistic regression and support vector machine, outperforms other methods, underscoring the effectiveness of the density-based selection strategy. Further analysis shows that increasing the number of clusters and sampling ratio improves the F-score, though with diminishing returns beyond a certain point.
+		 This paper introduces a novel Density-Based Dynamic Ensemble Learning Algorithm using Gaussian Mixture Models to address these issues. The proposed algorithm leverages Gaussian Mixture Models to capture complex data structures, creating subsets that reflect specific patterns, which are then used to train distinct base classifiers, ensuring diversity within the ensemble. The density-based dynamic selection strategy intelligently selects classifiers for each test instance based on its proximity to these clustered subsets, enhancing accuracy and adaptability. \tchange{Principal Component Analysis is applied as a preprocessing step, with 157 principal components retaining 95\% of the variance to keep clustering tractable in the high-dimensional feature space.}{\#7 added PCA statement to abstract (R2\#1)} The algorithm is evaluated against single ensemble methods as well as other dynamic ensemble methods to assess its performance and effectiveness, using logistic regression, support vector machine, k-nearest neighbors, and decision tree as base learners. Results demonstrate that the proposed method, particularly when combined with logistic regression and support vector machine, outperforms other methods, underscoring the effectiveness of the density-based selection strategy. Further analysis shows that increasing the number of clusters and sampling ratio improves the F-score, though with diminishing returns beyond a certain point.
 	\end{abstract}
 	
 	\begin{IEEEkeywords}
@@ -118,6 +128,7 @@ Yet, it encountered difficulties in handling highly complex data distributions, 
 	\noindent This paper proposes a novel dynamic ensemble model, the Density-Based Dynamic Ensemble Learning algorithm via Gaussian Mixture Model clustering (DDEL-GMM). \greenhighlight{DDEL-GMM is designed to enhance predictive accuracy in providing personalized predictions.} By employing Gaussian Mixture Models (GMM) for clustering and a density-based decision-making approach, \greenhighlight{the model aims to achieve} a more granular analysis of complex data distributions and \greenhighlight{provide} a robust framework for classifier competence estimation.
 	
 	As illustrated in Figure \ref{fig:training_phase_diagram}, the training phase of \greenhighlight{DDEL-GMM} involves leveraging GMM to effectively capture the underlying structure of the data. This approach facilitates the creation of specialized classifiers that are adept at recognizing specific data patterns within complex and overlapping distributions.
+	\tnote{\#12 removed a duplicated generalization-phase paragraph that was misplaced here (it recurs correctly before the generalization figure below).}
 	
 	\begin{figure*}[!t]
 		\centering
@@ -322,7 +333,7 @@ Yet, it encountered difficulties in handling highly complex data distributions, 
 	
 	\noindent To evaluate the effectiveness of the four ensemble methods, this study employs several key performance metrics. The primary metric for assessing classification performance is the \textbf{F-score}, which provides a balanced measure of precision and recall. To understand the consistency and robustness of the methods, the \textbf{mean}, \textbf{standard deviation}, and \textbf{maximum} of the F-scores obtained from cross-validation are also reported. These metrics collectively offer a comprehensive view of each model's accuracy, stability, and peak performance.
 	
-	\noindent The performance of various ensemble methods, with a base learner count $nc = 6$ and a regularization parameter $\phi = 0.5$, is systematically compared in Table \ref{tab:ensemble_comparison}. This table assesses four ensemble methods—DensityE (a density-based ensemble method), DistE (a distance-based ensemble method), AvgE (an average-based ensemble method), and MaxE (a maximum-based ensemble method)—using four distinct types of base learners: logistic regression (lr), support vector machine (svm), k-nearest neighbors (knn), and decision tree (dt).
+	\noindent The performance of various ensemble methods, with a base learner count $nc = 6$ and a regularization parameter $\phi = 0.5$, is systematically compared in \tchange{\mbox{Table \ref{tab:ensemble_comparison}}}{\#10 hardcoded ``Table 1'' $\rightarrow$ \textbackslash ref (R1\#11)}. This table assesses four ensemble methods—DensityE (a density-based ensemble method), DistE (a distance-based ensemble method), AvgE (an average-based ensemble method), and MaxE (a maximum-based ensemble method)—using four distinct types of base learners: logistic regression (lr), support vector machine (svm), k-nearest neighbors (knn), and decision tree (dt).
 	
 	\subsection{Ensemble Method Performance Analysis}
 	
@@ -438,6 +449,7 @@ Yet, it encountered difficulties in handling highly complex data distributions, 
 	likely because larger samples provide more representative data, allowing the
 	ensemble to make more accurate predictions.
 	
+	\tnote{\#6 fixed cross-wired Fig 3/4: reordered so the clusters figure precedes the sampling-ratio figure (matching text order) and corrected each \textbackslash label to match its caption (R1\#13).}
 	\begin{figure*}[t!]
 		\centering
 		\includegraphics[width=0.7\linewidth]{fscore_vs_clusters}
