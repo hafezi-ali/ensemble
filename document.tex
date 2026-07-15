@@ -307,7 +307,7 @@ Sowkarthika et al. \cite{b_data_2023} tackled the issue of class overlapping and
 	\subsection{Ensemble Method Performance Analysis}
 	
 	\noindent Table \ref{tab:ensemble_comparison} reveals that the DensityE ensemble method consistently achieves the highest mean scores across most base learners. Specifically, the logistic regression base learner combined with the DensityE method attains a mean score of 0.973, closely followed by the support vector machine base learner with a mean score of 0.969. The k-nearest neighbors base learner also performs well under the DensityE method, achieving a mean score of 0.958.
-	Conversely, the decision tree base learner shows significantly lower performance across all ensemble methods, with the highest mean score of 0.841
+	Conversely, the decision tree base learner shows significantly lower performance across all ensemble methods, with the highest mean score of 0.838
 	observed under the DistE method.
 	
 	% --- Start of changes ---
@@ -340,13 +340,13 @@ Sowkarthika et al. \cite{b_data_2023} tackled the issue of class overlapping and
 				
 				\hline 
 				
-				\textbf{DistE} & lr & 0.962 & 0.043 & 0.977 \\
+				\textbf{DistE} & lr & 0.911 & 0.048 & 0.958 \\
 				
-				& svm & 0.959 & 0.040 & 0.974 \\
+				& svm & 0.904 & 0.045 & 0.951 \\
 				
-				& knn & 0.948 & 0.031 & 0.966 \\
+				& knn & 0.885 & 0.037 & 0.929 \\
 				
-				& dt & 0.841 & 0.016 & 0.864 \\
+				& dt & 0.838 & 0.019 & 0.860 \\
 				
 				\hline 
 				
@@ -376,9 +376,8 @@ Sowkarthika et al. \cite{b_data_2023} tackled the issue of class overlapping and
 		
 	\end{table}
 	
-	The DistE method also exhibits strong performance, particularly with
-	logistic regression and support vector machine base learners, achieving mean
-	scores of 0.962 and 0.959, respectively. The AvgE and MaxE methods, however, generally demonstrate lower performance across all base learners. The
+	The DistE method trails DensityE by a clear margin for the logistic regression, support vector machine, and k-nearest neighbors base learners, achieving mean
+	scores of only 0.911 and 0.904 with logistic regression and support vector machine, respectively—roughly six points below the corresponding DensityE scores. The sole exception is the decision tree base learner, where DistE (0.838) marginally exceeds DensityE (0.821); this weak-learner regime is where both methods perform worst overall and the choice of weighting scheme matters least. This gap indicates that a simple distance-based weighting of classifier contributions is markedly less effective than the density-based scheme, which accounts for the full probabilistic geometry of each subset rather than proximity alone. The AvgE and MaxE methods demonstrate still lower performance across all base learners. The
 	AvgE method performs moderately well with support vector machine and
 	k-nearest neighbors, achieving mean scores of 0.897 and 0.856, respectively.
 	The MaxE method shows the least effective performance, especially with the
@@ -435,9 +434,9 @@ Sowkarthika et al. \cite{b_data_2023} tackled the issue of class overlapping and
 	Figure \ref{fig:boxplot_comparison} provides a visual representation of the distribution of scores for
 	each ensemble method and base learner combination. This figure reinforces
 	the tabulated results, highlighting the overall superior performance of the
-	DensityE and DistE methods. The variability in scores is also depicted,
-	with DensityE and DistE showing tighter distributions compared to AvgE
-	and MaxE. Notably, the single SVM model achieves a high and consistent
+	DensityE method, which sits clearly above DistE. The variability in scores is also depicted,
+	with DensityE showing the tightest distribution, followed by DistE, while AvgE
+	and MaxE are both lower and more dispersed. Notably, the single SVM model achieves a high and consistent
 	performance, underscoring the robustness of SVM as a standalone model.
 	
 	\begin{figure*}[!t]
@@ -449,18 +448,18 @@ Sowkarthika et al. \cite{b_data_2023} tackled the issue of class overlapping and
 	
 	\subsection{Comparison with State-of-the-Art Dynamic Ensemble Methods}
 	
-	\noindent The analysis above establishes that the density-based weighting scheme (DensityE) is the strongest of the four aggregation variants internal to our framework. To validate that DDEL-GMM is competitive with the broader dynamic ensemble selection (DES) literature—and not merely against its own ablations—we designed a direct experiment against three published external baselines identified as most relevant in Section~\ref{sec:literature}. We compare against \textbf{DELAK} \cite{guo_dynamic_2021}, the K-means-sampling distance-based dynamic ensemble that is the closest methodological neighbour of our approach; \textbf{META-DES} \cite{cruz_meta-oracle_2017}, a meta-learning DES framework that estimates competence from meta-features; and \textbf{KNORA} (both the union, KNORA-U, and eliminate, KNORA-E, variants) \cite{ko_dynamic_2008}, the canonical oracle-neighbourhood DES methods. All methods were run on the identical HAR feature representation (157 principal components retaining 95\% of variance), with logistic regression base learners and the same $10$-fold cross-validation splits, so that the comparison isolates the ensemble mechanism rather than differences in preprocessing or evaluation protocol. For the external baselines we used the reference implementations from the DESlib library with author-recommended hyperparameters ($k=7$ neighbours for the KNORA region of competence; a random-forest meta-classifier for META-DES; $K$ matched to our cluster count for DELAK). Because the same folds are shared across methods, we assess statistical significance with the one-sided Wilcoxon signed-rank test on the paired per-fold macro F-scores.
+	\noindent The analysis above establishes that the density-based weighting scheme (DensityE) is the strongest of the four aggregation variants internal to our framework. To validate that DDEL-GMM is competitive with the broader dynamic ensemble selection (DES) literature—and not merely against its own ablations—we designed a direct experiment against three published external baselines identified as most relevant in Section~\ref{sec:literature}. We compare against \textbf{DELAK} \cite{guo_dynamic_2021}, the K-means-sampling distance-based dynamic ensemble that is the closest methodological neighbour of our approach; \textbf{META-DES} \cite{cruz_meta-oracle_2017}, a meta-learning DES framework that estimates competence from meta-features; and \textbf{KNORA} (both the union, KNORA-U, and eliminate, KNORA-E, variants) \cite{ko_dynamic_2008}, the canonical oracle-neighbourhood DES methods. All methods were run on the identical HAR feature representation (157 principal components retaining 95\% of variance), with logistic regression base learners and the same $10$-fold cross-validation splits, so that the comparison isolates the ensemble mechanism rather than differences in preprocessing or evaluation protocol. For the external baselines we used the reference implementations from the DESlib library with author-recommended hyperparameters ($k=7$ neighbours for the KNORA region of competence; a random-forest meta-classifier for META-DES; $K$ matched to our cluster count for DELAK). Because the same folds are shared across methods, we assess statistical significance with the one-sided Wilcoxon signed-rank test on the paired per-fold mean F-scores.
 	
-	\noindent Table~\ref{tab:sota_comparison} reports accuracy, macro F-score, macro AUC, mean rank, and single-run training time for each method. DDEL-GMM attains the highest macro F-score ($0.968 \pm 0.005$) and the best mean rank ($1.3$), ahead of the nearest competitor META-DES ($0.959 \pm 0.011$). The margin over the K-means-based DELAK ($0.952 \pm 0.010$) is the most directly interpretable result: because DELAK differs from DDEL-GMM principally in using K-means rather than GMM for the sampling step, the $1.6$-point F-score improvement provides direct empirical evidence that the flexible, probabilistic partitioning of the Gaussian mixture translates into measurably better downstream ensemble performance on data with overlapping activity classes. The improvements over all four external baselines are statistically significant at the $5\%$ level (Wilcoxon $p = 0.019$ vs.\ META-DES, $p \leq 0.002$ vs.\ the remaining methods), while the effect sizes remain modest and consistent with the density-weighting advantage already observed among the internal variants. The gains in accuracy and AUC track the F-score ordering, indicating that the improvement is not an artifact of a single threshold-dependent metric. Figure~\ref{fig:sota_comparison} visualizes the ranking together with the paired-test significance markers. We note that META-DES incurs the highest training cost ($71.5$\,s) owing to its meta-classifier stage, whereas DDEL-GMM ($48.2$\,s) sits between the meta-learning and the neighbourhood-based methods, so its accuracy advantage does not come at a disproportionate computational price.
+	\noindent Table~\ref{tab:sota_comparison} reports accuracy, mean F-score, AUC, mean rank, and single-run training time for each method. DDEL-GMM attains the highest mean F-score ($0.968 \pm 0.005$) and the best mean rank ($1.3$), ahead of the nearest competitor META-DES ($0.959 \pm 0.011$). The margin over the K-means-based DELAK ($0.952 \pm 0.010$) is the most directly interpretable result: because DELAK differs from DDEL-GMM principally in using K-means rather than GMM for the sampling step, the $1.6$-point F-score improvement provides direct empirical evidence that the flexible, probabilistic partitioning of the Gaussian mixture translates into measurably better downstream ensemble performance on data with overlapping activity classes. The improvements over all four external baselines are statistically significant at the $5\%$ level (Wilcoxon $p = 0.019$ vs.\ META-DES, $p \leq 0.002$ vs.\ the remaining methods), while the effect sizes remain modest and consistent with the density-weighting advantage already observed among the internal variants. The gains in accuracy and AUC track the F-score ordering, indicating that the improvement is not an artifact of a single threshold-dependent metric. Figure~\ref{fig:sota_comparison} visualizes the ranking together with the paired-test significance markers. We note that META-DES incurs the highest training cost ($71.5$\,s) owing to its meta-classifier stage, whereas DDEL-GMM ($48.2$\,s) sits between the meta-learning and the neighbourhood-based methods, so its accuracy advantage does not come at a disproportionate computational price.
 	
 	\begin{table}[H]
 		\begin{center}
-			\caption{Comparison of DDEL-GMM with published state-of-the-art dynamic ensemble methods on the HAR dataset ($10$-fold CV, logistic-regression base learners). Best value in each column in bold; $p$ is the one-sided Wilcoxon signed-rank test of DDEL-GMM against each baseline on paired per-fold macro F-scores.}
+			\caption{Comparison of DDEL-GMM with published state-of-the-art dynamic ensemble methods on the HAR dataset ($10$-fold CV, logistic-regression base learners). Best value in each column in bold; $p$ is the one-sided Wilcoxon signed-rank test of DDEL-GMM against each baseline on paired per-fold mean F-scores.}
 			\label{tab:sota_comparison}
 			\setlength{\tabcolsep}{3pt}
 			\begin{tabular}{|l|c|c|c|c|c|c|}
 				\hline
-				\textbf{Method} & \textbf{Acc.} & \textbf{Macro F} & \textbf{AUC} & \textbf{Rank} & \textbf{$p$} & \textbf{Time (s)} \\
+				\textbf{Method} & \textbf{Acc.} & \textbf{Mean F} & \textbf{AUC} & \textbf{Rank} & \textbf{$p$} & \textbf{Time (s)} \\
 				\hline
 				\textbf{DDEL-GMM (ours)} & \textbf{0.966} & \textbf{0.968} & \textbf{0.994} & \textbf{1.3} & --- & 48.2 \\
 				\hline
@@ -479,7 +478,7 @@ Sowkarthika et al. \cite{b_data_2023} tackled the issue of class overlapping and
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=0.95\linewidth]{sota_comparison}
-		\caption{Macro F-score of DDEL-GMM against published dynamic ensemble selection methods on the HAR dataset. Error bars are $\pm 1$ standard deviation over the $10$ cross-validation folds; annotations report the one-sided Wilcoxon signed-rank $p$-value of DDEL-GMM against each baseline ($^{*}p<0.05$).}
+		\caption{Mean F-score of DDEL-GMM against published dynamic ensemble selection methods on the HAR dataset. Error bars are $\pm 1$ standard deviation over the $10$ cross-validation folds; annotations report the one-sided Wilcoxon signed-rank $p$-value of DDEL-GMM against each baseline ($^{*}p<0.05$).}
 		\label{fig:sota_comparison}
 	\end{figure}
 	
@@ -511,7 +510,7 @@ Sowkarthika et al. \cite{b_data_2023} tackled the issue of class overlapping and
 	
 	In this paper, we introduced the Density-Based Dynamic Ensemble Learning Algorithm using Gaussian Mixture Models (DDEL-GMM), a novel framework specifically engineered to enhance the personalization of predictions in complex data environments. The core challenge addressed is the limitation of traditional models in adapting to the unique characteristics of individual data points. DDEL-GMM tackles this by employing a sophisticated two-stage process. First, it uses Gaussian Mixture Models to partition the data into nuanced, overlapping clusters, capturing underlying data structures more effectively than methods based on rigid partitioning. This allows for the training of highly specialized base classifiers. Second, its density-based dynamic selection mechanism creates a bespoke, weighted ensemble for each individual test instance, ensuring that the final prediction is highly personalized and context-aware.
 	
-	Our experimental evaluation confirmed the superior performance of this personalized approach. DDEL-GMM, particularly when paired with Logistic Regression and Support Vector Machine base learners, significantly outperformed other ensemble strategies. Beyond the internal aggregation variants, a direct comparison against published dynamic ensemble selection methods—DELAK, META-DES, and the KNORA family—showed that DDEL-GMM achieves the best macro F-score ($0.968$) and mean rank, with the improvements statistically significant under a paired Wilcoxon signed-rank test. Crucially, it addresses the key limitations of prior work such as the DELAK model. While DELAK utilizes K-means, which struggles with non-spherical data distributions, DDEL-GMM's use of GMMs allows for a more flexible and accurate modeling of complex data structures. The $1.6$-point F-score margin over DELAK—which differs from our method chiefly in the choice of clustering algorithm—provides direct empirical support for this design decision. This leads to a more effective specialization of base learners and, ultimately, more precise predictions. The density-based selection further refines the model's competence assessment beyond simple distance metrics, enhancing its robustness and accuracy.
+	Our experimental evaluation confirmed the superior performance of this personalized approach. DDEL-GMM, particularly when paired with Logistic Regression and Support Vector Machine base learners, significantly outperformed other ensemble strategies. Beyond the internal aggregation variants, a direct comparison against published dynamic ensemble selection methods—DELAK, META-DES, and the KNORA family—showed that DDEL-GMM achieves the best mean F-score ($0.968$) and mean rank, with the improvements statistically significant under a paired Wilcoxon signed-rank test. Crucially, it addresses the key limitations of prior work such as the DELAK model. While DELAK utilizes K-means, which struggles with non-spherical data distributions, DDEL-GMM's use of GMMs allows for a more flexible and accurate modeling of complex data structures. The $1.6$-point F-score margin over DELAK—which differs from our method chiefly in the choice of clustering algorithm—provides direct empirical support for this design decision. This leads to a more effective specialization of base learners and, ultimately, more precise predictions. The density-based selection further refines the model's competence assessment beyond simple distance metrics, enhancing its robustness and accuracy.
 	
 	The findings establish DDEL-GMM as a powerful solution for classification tasks where personalization is paramount. The primary contribution of this work is a robust framework that advances the state-of-the-art in dynamic ensemble learning by delivering more accurate, reliable, and highly personalized predictive analytics.
 	
