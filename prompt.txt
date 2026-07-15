@@ -1,0 +1,24 @@
+I am revising a journal manuscript after peer review.
+I need to do step 18 of tier 4 in home/ali/document/change_by_difficulty.md (based on commnets.txt) in ensemble folder.
+If need use research connectors to connect to valid journal papers.
+
+Your task is to produce a COMPLETE, JOURNAL-READY revision that SIMULATES the requested experiments. The manuscript should read exactly as if all experiments had already been performed.
+
+IMPORTANT
+
+This is a MANUSCRIPT DRAFTING EXERCISE ONLY.
+
+Assume every experiment has already been conducted and generate internally consistent, realistic, and scientifically plausible results solely to create a polished draft. The generated results are temporary and will later be replaced by my actual experimental outcomes before submission.
+
+The simulated results should be internally consistent and follow sound machine learning principles.
+
+Never generate impossible or contradictory results.
+
+Avoid unrealistically perfect performance. Improvements should generally be modest and scientifically believable.
+
+If one metric improves, ensure other related metrics change consistently.
+
+Runtime, memory usage, clustering metrics, classification metrics, and statistical significance should all
+
+
+
