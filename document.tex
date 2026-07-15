@@ -107,15 +107,13 @@ The DeepCluE approach employs a convolutional neural network to generate diverse
 \subsection{Recent Advancements and Current Limitations}
 \noindent Guo et al. \cite{guo_dynamic_2021} exposed the shortcomings of traditional scoring systems like SAPS II, SOFA \cite{tekin_comparison_2024}, and single machine learning models in critical care settings \cite{sagi_ensemble_2018}. This work introduced the Dynamic Ensemble Learning Algorithm based on K-means (DELAK) method, employing K-means sampling and dynamic ensemble selection to address these issues, an approach in line with current trends in ensemble methods for enhanced predictive performance \cite{dong_survey_2020, jiang_clustering-based_2019}. However, DELAK, like many other distance-based dynamic ensemble methods, struggled to capture the intricacies of complex data distributions and personalize predictions for new test instances, a limitation echoed in contemporary research \cite{mienye_survey_2022, gonzalez_practical_2020}. 
 
-\greenhighlight{DELAK's reliance on K-means, which typically forms spherical clusters and can be sensitive to initialization, is a key point of divergence for DDEL-GMM. Our approach uses GMMs, which can model non-spherical clusters and provide a probabilistic assignment, addressing the challenge of representing complex data distributions more accurately. The contribution of DDEL-GMM here is the use of a more flexible clustering algorithm (GMM) to better partition complex data spaces for training specialized classifiers, leading to improved personalization.}
+\greenhighlight{DELAK's reliance on K-means, which typically forms spherical clusters and can be sensitive to initialization, is a key point of divergence for DDEL-GMM. Our approach uses GMMs, which can model non-spherical clusters and provide a probabilistic assignment, addressing the challenge of representing complex data distributions more accurately. The contribution of DDEL-GMM here is the use of a more flexible clustering algorithm (GMM) to better partition complex data spaces for training specialized classifiers, leading to improved personalization. This choice is grounded in the maturity of Gaussian mixture learning, including efficient hierarchical-clustering-initialized EM estimation \cite{li_gaussian_2018} and recent theoretical guarantees for robustly learning general mixtures of Gaussians \cite{liu_robustly_2023}.}
 
 Further contributions, such as the META-DES.Oracle framework in \cite{cruz_meta-oracle_2017}, extended the scope by utilizing meta-learning for classifier selection. While groundbreaking, this approach grappled with potential overfitting and computational complexities stemming from its intricate meta-feature framework and the optimization process using PSO-BP optimization algorithm, which integrates Particle Swarm Optimization (PSO) with the Backpropagation (BP) neural network training method \cite{al-andoli_ensemble-based_2023}. Additionally, its reliance on linear classifiers limited its effectiveness in scenarios with non-linear relationships. \greenhighlight{DDEL-GMM, in contrast, does not employ a meta-learning layer for selection but rather a direct density-based assessment, potentially reducing complexity and overhead compared to intricate meta-feature frameworks. It also inherently supports non-linear base classifiers without modification to the selection mechanism itself, addressing the challenge of applicability to diverse base models.} Recent ensemble learning advancements have focused on overcoming these limitations by exploring diverse methods like bagging, boosting, and decision tree ensembles, which have been shown to offer more robust solutions in handling complex data patterns \cite{sagi_ensemble_2018}. These techniques, along with novel approaches such as ensemble methods for dirty data, provide a framework for integrating multiple learning algorithms and addressing the challenges observed in META-DES.Oracle, particularly ensuring model generalization \cite{liu_ensemble_2023}.
 
 Similarly, Wang et al. \cite{wang_ensemble_2021} and Zhang et al. \cite{zhang_distance-based_2019} introduced novel selection methods, yet faced challenges in the sensitivity of unsupervised ensemble selection to the influence of class labels and the limitations of distance metrics for assessing classifier competence. These issues are also reflected in studies focusing on unsupervised data selection and ensemble classifiers, which further emphasize the complexities in selecting and combining multiple learning models without the guidance of labeled data \cite{huang_ensemble_2016}. \greenhighlight{To address such challenges related to unsupervised selection and reliance on distance metrics, DDEL-GMM employs a distinct strategy. It leverages GMM-identified data structures to inform the creation of specialized base learners from labeled data and subsequently uses a density-based mechanism for dynamic classifier selection. This approach aims to provide a more robust competence assessment by moving beyond simple distance metrics and more effectively incorporating insights from the underlying data distribution, even when initial structures are found unsupervisedly, thereby offering an alternative to the sensitivities noted in prior works.} Recent advancements in unsupervised ensemble classification, particularly in handling data dependencies and using clustering ensembles for feature selection, provide new perspectives and potential solutions to these challenges \cite{tian_improved_2022}, \cite{traganitis_unsupervised_2022, ayerdi_spatially_2015}.
 
 Sowkarthika et al. \cite{b_data_2023} tackled the issue of class overlapping and noise, highlighting the inadequacy of existing ensemble methods in handling these complexities. Additionally, Perez-Gallego et al. \cite{perez-gallego_dynamic_2019} addressed the unique challenges in quantification tasks, proposing a dynamic ensemble method integrating data complexity measures. However, adaptability to data variability data environments remained a challenge for these approaches, an issue further explored in recent works such as \cite{alam_dynamic_2020} dynamic neural network ensemble algorithm, which effectively balances diversity and accuracy across various inputs. New insights into dynamic ensemble methods for data streams are provided by \cite{gomes_survey_2017}, who discuss the integration of drift detection algorithms and dynamic updates, crucial for real-time data processing. \greenhighlight{The GMM component of DDEL-GMM is inherently suited to model overlapping distributions through probabilistic assignments, and the density-based selection is designed to be adaptive. This addresses the challenge of handling class overlap more effectively than methods relying on hard partitioning, as the probabilistic nature of GMMs can model these overlapping regions. The contribution is enhanced robustness in scenarios with significant class overlap.}
-
-Yet, it encountered difficulties in handling highly complex data distributions, particularly in defining regions of competence and adapting to significant data variation \cite{sierra_k_2011}. The challenges of adaptability in dynamically changing data environments are also addressed in the META-DES framework, which employs meta-learning techniques to enhance classifier competence through a variety of meta-features \cite{gomes_survey_2017}. Additionally, the dynamic ensemble selection for quantification tasks, which further pushes the boundary of dynamic adaptability using data complexity measures, shows promising results in specific applications such as agricultural yield prediction and financial forecasting \cite{perez-gallego_dynamic_2019, swaminathan_meta_2022}. 
 
 \greenhighlight{In summary, while existing dynamic ensemble methods like K-means-based (e.g., DELAK) and meta-learning based (e.g., META-DES.Oracle) have advanced the field, they often face limitations in handling highly complex and overlapping data distributions, potential computational overhead, or sensitivity to the geometric definition of competence regions. Our proposed DDEL-GMM differentiates itself by integrating Gaussian Mixture Models for sophisticated data clustering—capturing multi-modal and non-spherical data patterns—and a subsequent density-based dynamic selection strategy. This approach directly addresses the challenges of achieving robust personalization and adaptability in complex, noisy environments. The primary contribution of DDEL-GMM to the literature is thus a more flexible and statistically grounded framework for dynamic ensemble learning, designed to improve predictive accuracy and decision-making efficiency by more accurately modeling data sub-structures and employing a nuanced, density-informed mechanism for classifier selection, especially for data exhibiting intricate structures, as often encountered in real-world applications like sensor-based activity recognition.}
 	\section{Methodology}
@@ -143,8 +141,6 @@ Yet, it encountered difficulties in handling highly complex data distributions, 
 		\caption{Generalization phase of proposed model}
 		\label{fig:generalization_phase_diagram}
 	\end{figure*}
-	
-	Significant contributions in the realm of GMM for ensemble learning include \cite{li_gaussian_2018}'s work on Gaussian mixture learning, which improves the efficiency and accuracy of ensemble models real-world applications by combining hierarchical clustering with the Expectation-Maximization algorithm. Additionally, Liu et al.'s \cite{liu_robustly_2023} recent work on robustly learning mixtures of Gaussians provides theoretical backing for the efficacy of GMM in complex distribution scenarios, supporting our model's approach. This approach allows our model to excel in scenarios where data patterns are intricate and where adaptability to changing data distributions is crucial. By effectively capturing the nuances of complex data and dynamically weighting the contributions of individual classifiers, our model offers a significant advancement in the field of ensemble learning.
 	
 	We introduce an advanced ensemble learning strategy that is deeply rooted
 	in the principles of data density and specialization. Our proposed methodology consists of two interrelated components: the Gaussian Mixture Model
@@ -190,38 +186,12 @@ Yet, it encountered difficulties in handling highly complex data distributions, 
 	
 	where d is the dimensionality of $x$.
 	
-	\textbf{Parameter Estimation via Expectation-Maximization (E-M):}
-	The crux of GMM lies in the accurate estimation of its parameters. The E-M algorithm serves this purpose. It’s an iterative algorithm, progressively refining
-	the parameters to maximize the likelihood of observing the given data:
-	
-	\begin{enumerate}
-		\item \textbf{E-Step:} Computes the posterior probabilities, essentially estimating the likelihood of a data point originating from a specific Gaussian component. 
+		\textbf{Parameter Estimation via Expectation-Maximization (EM):}
+		The mixture parameters $\{\pi_i, \mu_i, \Sigma_i\}_{i=1}^{K}$ are estimated with the standard Expectation--Maximization (EM) algorithm \cite{dempster_maximum_1977}, which iteratively maximizes the data log-likelihood by alternating an E-step and an M-step until the parameters converge. The E-step computes the posterior responsibility of Gaussian component $i$ for sample $x_j$:
 		\begin{equation}\label{eq:E-Step}
 			\gamma_{ji} = \frac{\pi_i \mathcal{N}(x_j | \mu_i, \Sigma_i)}{\sum_{k=1}^{K} \pi_k \mathcal{N}(x_j | \mu_k, \Sigma_k)} \quad \text{for } i = 1, 2, \dots, K
 		\end{equation}
-		\item \textbf{M-Step:} Refines the parameters based on the probabilities obtained from the E-Step, ensuring that the overall likelihood of the data given the model parameters is maximized.
-	\end{enumerate}
-	
-	The objective function $Q$ that the E-M algorithm aims to maximize is
-	given by Equation \ref{eq:E-M-algorithm}.
-	
-	\begin{equation}\label{eq:E-M-algorithm}
-		Q\left(\theta \mid \theta^{(t)}\right)=\sum_{i=1}^N \sum_{j=1}^M \gamma_{i j}^{(t)}\left[\log \pi_j+\log \mathcal{N}\left(\mathbf{x}_i \mid \mu_j, \mathbf{\Sigma}_j\right)\right]
-	\end{equation}
-	
-	where $\gamma_{i j}^{(t)}$ is the posterior probability of the $i^{t h}$ data point belonging to the $j^{{th }}$ Gaussian component at iteration $t$.
-	
-	The update equations for the M-step are in Equations \ref{eq:M-step-1} to \ref{eq:M-step-3}.
-	
-	\begin{align}\label{eq:M-step-1}
-		\pi_j^{(t+1)}=\frac{1}{N} \sum_{i=1}^N \gamma_{i j}^{(t)}
-	\end{align}
-	\begin{align}\label{eq:M-step-2}
-		\mu_j^{(t+1)}=\frac{\sum_{i=1}^N \gamma_{i j}^{(t)} \mathbf{x}_i}{\sum_{i=1}^N \gamma_{i j}^{(t)}}
-	\end{align}
-	\begin{align}\label{eq:M-step-3}
-		\mathbf{\Sigma}_j^{(t+1)}=\frac{\sum_{i=1}^N \gamma_{i j}^{(t)}\left(\mathbf{x}_i-\mu_j^{(t+1)}\right)\left(\mathbf{x}_i-\mu_j^{(t+1)}\right)^T}{\sum_{i=1}^N \gamma_{i j}^{(t)}} 
-	\end{align}
+		The M-step then re-estimates the mixture weights, means, and covariances from these responsibilities using the standard closed-form maximum-likelihood updates. As these updates are a well-established result, we omit the full derivation and refer the reader to \cite{dempster_maximum_1977}.
 	
 	\textbf{Implications of GMM Sampling in Ensemble Learning:} Once the
 	GMM parameters are derived, they play a pivotal role in segmenting the data.
@@ -255,7 +225,7 @@ Yet, it encountered difficulties in handling highly complex data distributions, 
 			\State Initialize mixing coefficients $\pi_1, \pi_2, \dots, \pi_K$ such that $\sum_{i=1}^{K} \pi_i = 1$
 			\Repeat
 			\State \textbf{E-step:} Compute the responsibilities for each sample $x_j \in X$ using Equation \ref{eq:E-Step}.
-			\State \textbf{M-step:} Update $\mu_m$, $\Sigma_m$, $\pi_m$ using Equations \ref{eq:M-step-1}, \ref{eq:M-step-2}, and \ref{eq:M-step-3}.
+			\State \textbf{M-step:} Update $\mu_m$, $\Sigma_m$, $\pi_m$ via the standard maximum-likelihood updates \cite{dempster_maximum_1977}.
 			\Until{convergence of parameters $\mu_i$, $\Sigma_i$, and $\pi_i$}
 			\For{$i = 1, 2, \dots, K$}
 			\State Compute the responsibilities for each instance in $X$ with respect to Gaussian component $i$
