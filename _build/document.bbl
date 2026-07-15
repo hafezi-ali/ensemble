@@ -192,6 +192,22 @@ K.~Aziz, F.~Chen, I.~Khan, S.~H. Khahro, M.~A. Malik, Z.~A. Memon, and
   {Instance} {Hardness} and {Region} of {Competence} {Strategy},'' \emph{IEEE
   Access}, vol.~12, pp. 139\,540--139\,559, 2024.
 
+\bibitem{jia_feature_2022}
+\BIBentryALTinterwordspacing
+W.~Jia, M.~Sun, J.~Lian, and S.~Hou, ``Feature dimensionality reduction: a
+  review,'' \emph{Complex \& Intelligent Systems}, vol.~8, no.~3, pp.
+  2663--2693, 2022. [Online]. Available:
+  \url{https://doi.org/10.1007/s40747-021-00637-x}
+\BIBentrySTDinterwordspacing
+
+\bibitem{berahmand_autoencoders_2024}
+\BIBentryALTinterwordspacing
+K.~Berahmand, F.~Daneshfar, E.~S. Salehi, Y.~Li, and Y.~Xu, ``Autoencoders and
+  their applications in machine learning: a survey,'' \emph{Artificial
+  Intelligence Review}, vol.~37, no.~2, 2024. [Online]. Available:
+  \url{https://doi.org/10.1007/s10462-023-10662-6}
+\BIBentrySTDinterwordspacing
+
 \bibitem{dehghan_rouzi_breast_2023}
 \BIBentryALTinterwordspacing
 M.~Dehghan~Rouzi, B.~Moshiri, M.~Khoshnevisan, M.~A. Akhaee, F.~Jaryani,
@@ -282,6 +298,18 @@ S.~González, S.~García, J.~Del~Ser, L.~Rokach, and F.~Herrera, ``A practical
   \url{https://www.sciencedirect.com/science/article/pii/S1566253520303195}
 \BIBentrySTDinterwordspacing
 
+\bibitem{li_gaussian_2018}
+\BIBentryALTinterwordspacing
+J.~Li and A.~Nehorai, ``Gaussian mixture learning via adaptive hierarchical
+  clustering,'' \emph{Signal Processing}, vol. 150, pp. 116--121, Sep. 2018.
+  [Online]. Available:
+  \url{https://www.sciencedirect.com/science/article/pii/S0165168418301397}
+\BIBentrySTDinterwordspacing
+
+\bibitem{liu_robustly_2023}
+A.~Liu and A.~Moitra, ``Robustly {Learning} {General} {Mixtures} of
+  {Gaussians},'' \emph{Journal of the ACM}, vol.~70, Feb. 2023.
+
 \bibitem{al-andoli_ensemble-based_2023}
 \BIBentryALTinterwordspacing
 M.~N. Al-Andoli, K.~S. Sim, S.~C. Tan, P.~Y. Goh, and C.~P. Lim, ``An
@@ -368,35 +396,10 @@ H.~M. Gomes, J.~P. Barddal, F.~Enembreck, and A.~Bifet, ``A {Survey} on
   {Ensemble} {Learning} for {Data} {Stream} {Classification},'' \emph{ACM
   Comput. Surv.}, vol.~50, pp. 23:1--23:36, Mar. 2017.
 
-\bibitem{sierra_k_2011}
-\BIBentryALTinterwordspacing
-B.~Sierra, E.~Lazkano, I.~Irigoien, E.~Jauregi, and I.~Mendialdua,
-  ``\textit{{K}} {Nearest} {Neighbor} {Equality}: {Giving} equal chance to all
-  existing classes,'' \emph{Information Sciences}, vol. 181, no.~23, pp.
-  5158--5168, Dec. 2011. [Online]. Available:
-  \url{https://www.sciencedirect.com/science/article/pii/S0020025511003562}
-\BIBentrySTDinterwordspacing
-
-\bibitem{swaminathan_meta_2022}
-\BIBentryALTinterwordspacing
-B.~Swaminathan, S.~Palani, and S.~Vairavasundaram,
-  ``\BIBforeignlanguage{en}{Meta {Learning}-{Based} {Dynamic} {Ensemble}
-  {Model} for {Crop} {Selection}},'' \emph{\BIBforeignlanguage{en}{Applied
-  Artificial Intelligence}}, vol.~36, no.~1, p. 2145646, Dec. 2022. [Online].
-  Available:
-  \url{https://www.tandfonline.com/doi/full/10.1080/08839514.2022.2145646}
-\BIBentrySTDinterwordspacing
-
-\bibitem{li_gaussian_2018}
-\BIBentryALTinterwordspacing
-J.~Li and A.~Nehorai, ``Gaussian mixture learning via adaptive hierarchical
-  clustering,'' \emph{Signal Processing}, vol. 150, pp. 116--121, Sep. 2018.
-  [Online]. Available:
-  \url{https://www.sciencedirect.com/science/article/pii/S0165168418301397}
-\BIBentrySTDinterwordspacing
-
-\bibitem{liu_robustly_2023}
-A.~Liu and A.~Moitra, ``Robustly {Learning} {General} {Mixtures} of
-  {Gaussians},'' \emph{Journal of the ACM}, vol.~70, Feb. 2023.
+\bibitem{dempster_maximum_1977}
+A.~P. Dempster, N.~M. Laird, and D.~B. Rubin, ``Maximum likelihood from
+  incomplete data via the {EM} algorithm,'' \emph{Journal of the Royal
+  Statistical Society: Series B (Methodological)}, vol.~39, no.~1, pp. 1--22,
+  1977.
 
 \end{thebibliography}
