@@ -1,0 +1,62 @@
+{
+  "Funcs/Functions.py": {
+    "mtime": 1716935316.0,
+    "ast_hash": "d592ed7a2342753a19dc94e6d7952de4",
+    "semantic_hash": "d592ed7a2342753a19dc94e6d7952de4"
+  },
+  "Funcs/Model_functions.py": {
+    "mtime": 1716942538.0,
+    "ast_hash": "8eb9d7030f9bee6933e02b1891c65519",
+    "semantic_hash": "8eb9d7030f9bee6933e02b1891c65519"
+  },
+  "Funcs/Plot_functions.py": {
+    "mtime": 1716419996.0,
+    "ast_hash": "ce745a54302a725750b3430455e1277f",
+    "semantic_hash": "ce745a54302a725750b3430455e1277f"
+  },
+  "Lib/lib.py": {
+    "mtime": 1716921878.0,
+    "ast_hash": "706066259f92be606863f4de89a8cd6d",
+    "semantic_hash": "706066259f92be606863f4de89a8cd6d"
+  },
+  "codes/base_train.py": {
+    "mtime": 1752515566.0,
+    "ast_hash": "9430bcd54b947f056fb96ff19267f440",
+    "semantic_hash": "9430bcd54b947f056fb96ff19267f440"
+  },
+  "codes/evaluation.py": {
+    "mtime": 1752502997.0,
+    "ast_hash": "c81dd78bca764c317fce665c4771d07e",
+    "semantic_hash": "c81dd78bca764c317fce665c4771d07e"
+  },
+  "Plots/plot_n_clusters.pdf": {
+    "mtime": 1717356305.0,
+    "ast_hash": "c0bdf6dcc4a8fbf9dcac89f3a0a2c6df",
+    "semantic_hash": "c0bdf6dcc4a8fbf9dcac89f3a0a2c6df"
+  },
+  "Plots/plot_phi_ratio.pdf": {
+    "mtime": 1717356306.0,
+    "ast_hash": "2a3f0e4154866bb410722d587c5eda7f",
+    "semantic_hash": "2a3f0e4154866bb410722d587c5eda7f"
+  },
+  "boxplot_comparison.jpg": {
+    "mtime": 1725217330.0,
+    "ast_hash": "782becb3de8e9f653d83228fb8884c01",
+    "semantic_hash": "782becb3de8e9f653d83228fb8884c01"
+  },
+  "boxplot_comparison_1.jpg": {
+    "mtime": 1725208443.0,
+    "ast_hash": "6da0111d75bfc84329bed8282f688b37",
+    "semantic_hash": "6da0111d75bfc84329bed8282f688b37"
+  },
+  "fscore_vs_clusters.jpg": {
+    "mtime": 1725208471.0,
+    "ast_hash": "3002fb8bccb9df1ca206836cf8ddf7e6",
+    "semantic_hash": "3002fb8bccb9df1ca206836cf8ddf7e6"
+  },
+  "fscore_vs_phi.jpg": {
+    "mtime": 1725208473.0,
+    "ast_hash": "e68c625855a94a92e157d398ca186de2",
+    "semantic_hash": "e68c625855a94a92e157d398ca186de2"
+  }
+}

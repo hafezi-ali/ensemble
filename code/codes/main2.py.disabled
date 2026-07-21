@@ -1,0 +1,225 @@
+import copy
+# Import necessary libs
+import os
+import pickle
+
+os.chdir('/content/drive/MyDrive/Thp')
+# Set the PYTHONPATH environment variable to include the directory containing your modules
+os.environ['PYTHONPATH'] = '/content/drive/MyDrive/Thp'
+
+from Funcs.Functions import *
+from Funcs.Model_functions import *
+import Funcs
+from Lib.lib import *
+
+# %%
+import copy
+import os
+import pandas as pd
+from tqdm import tqdm
+from joblib import Parallel, delayed
+from sklearn.model_selection import RepeatedKFold
+from sklearn.preprocessing import LabelEncoder
+from sklearn.metrics import confusion_matrix, classification_report
+from sklearn.mixture import GaussianMixture
+from sklearn.linear_model import SGDClassifier
+from sklearn.decomposition import PCA
+import torch
+import numpy as np
+from numpy import argmax
+from functools import reduce
+
+
+# Load data
+uci_data_handle_new = pd.read_csv('Data/UCI_HAR_Dataset/data_uci_handled.csv', index_col=0)
+uci_data_handle_new['Activity'] = uci_data_handle_new['Activity'] + 1
+database = {'uci': uci_data_handle_new}
+
+X = database['uci'].drop(['Activity', 'ActivityName', 'subject'], axis=1)
+y = database['uci']['ActivityName']
+
+# Load previous results
+df_single_resampling_res_grid = pd.read_pickle('Results/df_single_resampling_res_grid_last2.pkl')
+single_preprocessing_res_grid = pd.read_pickle('Results/single_preprocessing_res_grid_last2.pkl')
+
+# Define models
+models = get_models()
+models.pop('gn')
+models['sgd'] = models['sgd'].set_params(loss='log_loss')
+
+# Device selection
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+# Hyperparameter ranges
+phi_list = np.arange(0.1, 1, 0.1)
+n_c_list = np.arange(2, 3)
+n_repeats = 4
+n_splits = 5
+cv = RepeatedKFold(n_splits=n_splits, n_repeats=n_repeats, random_state=42)
+
+# Result dataframe
+df_single_best_res_nested = pd.DataFrame(columns=['phi', 'n_c', 'best_res_nested'])
+
+def process_combination(n_c, phi):
+    print('------------------------------------- n_c: {} & phi: {} -------------------------------------'.format(n_c, phi))
+    try:
+        scores = []
+        data_split = {}
+        # single_preprocessing_reses = {}
+        # single_resampling_reses = {}
+        # main_model_architectures_dict_nested = {}
+        # signed_base_classifires_dict_nested = {}
+        # Ordered_centers_indexes = {}
+        final_outs = {}
+        final_res = {}
+
+        for k, (train_ix, test_ix) in enumerate(cv.split(X)):
+            X_train, X_test = X.iloc[train_ix], X.iloc[test_ix]
+            y_train, y_test = y.iloc[train_ix], y.iloc[test_ix]
+            data_split[k] = {'X_train': X_train, 'X_test': X_test, 'y_train': y_train, 'y_test': y_test}
+
+            # Preprocessing
+            random_state_pca = None
+            single_preprocessing_res = single_preprocessing(
+                X_train=X_train, X_test=X_test, y_train=y_train,
+                n_components=single_preprocessing_res_grid['X_train'].shape[1],
+                random_state_pca=random_state_pca
+            )
+            # single_preprocessing_reses[k] = single_preprocessing_res
+
+            # Single model performance
+            df_cm_single_models = {}
+            cr_single_models = {}
+            for single_model in models:
+                model = copy.deepcopy(models[single_model])
+                model.fit(single_preprocessing_res['X_train'], y_train)
+                y_pred_test_single_model = model.predict(single_preprocessing_res['X_test'])
+
+                df_cm_single_model, cr_single_model = model_performance_report(
+                    y_real=y_test, y_pred=y_pred_test_single_model, plot=False,
+                    title=f'model_single_{single_model}'
+                )
+
+                df_cm_single_models[f'single_{single_model}'] = df_cm_single_model
+                cr_single_models[f'single_{single_model}'] = cr_single_model
+
+            # Resampling
+            gmm = GaussianMixture(n_components=n_c)
+            single_resampling_res = resampling(
+                clusterig_method=gmm, X_train_dist=single_preprocessing_res['X_train'], y_train_dist=y_train, phi=phi,
+                random_state_cluster_samples_shuffling=42,
+                distance_metrics='Euclidean'
+            )
+            # single_resampling_reses[k] = single_resampling_res
+
+            # Get pre-computed results from grid search
+            df_out = df_single_resampling_res_grid[
+                (df_single_resampling_res_grid.phi == phi) & (df_single_resampling_res_grid.n_c == n_c)
+            ]
+
+            # Match cluster centers
+            centers_1 = np.array(single_resampling_res['cluster_centers'])
+            centers_2 = np.array(df_out['single_resampling_res'].iloc[0]['cluster_centers'])
+            differences = centers_1[:, np.newaxis, :] - centers_2[np.newaxis, :, :]
+            distances = np.linalg.norm(differences, axis=2)
+            ordered_centers_indexes = np.argmin(distances, axis=1)
+            # Ordered_centers_indexes[k] = ordered_centers_indexes
+
+            # Signed base classifiers for each cluster
+            signed_base_classifires_dict = {}
+            for single_model in models:
+                signed_base_classifires = [df_out['best_models_clusters'].iloc[0][single_model][i] for i in ordered_centers_indexes]
+                signed_base_classifires_dict[single_model] = signed_base_classifires
+            # signed_base_classifires_dict_nested[k] = signed_base_classifires_dict
+
+            # Fit base classifiers to resampled clusters
+            for l in range(n_c):
+                x_re_cluster = single_resampling_res['rm_cluster_samples'][l]
+                y_re_clusters = single_resampling_res['rm_cluster_samples_labels'][l]
+                for single_model_name in models:
+                    single_model = copy.deepcopy(signed_base_classifires_dict[single_model_name][l])
+                    signed_base_classifires_dict[single_model_name][l] = single_model.fit(x_re_cluster, y_re_clusters)
+
+            # Main model architecture
+            use_ensemble = {'diste': True, 'avge': True, 'acce': False, 'maxe': True, 'densitye': True}
+            main_model_architecture_dict = {}
+            for single_model in models:
+                main_model_architecture = MainModel(
+                    Best_models_clusters=signed_base_classifires_dict[single_model],
+                    normalization=False,
+                    scale_re_clusters=None,
+                    candidate_models_cluster=df_out['sorted_candidate_models_cluster_grid'],
+                    cluster_centers=single_resampling_res['cluster_centers'],
+                    min_distances=single_resampling_res['min_distances'],
+                    classes=sorted(y_test.unique()), use_ensemble=use_ensemble,
+                    cluster_model=single_resampling_res['cluster_model'],
+                    meta_learner=False
+                )
+                main_model_architecture_dict[single_model] = main_model_architecture
+            # main_model_architectures_dict_nested[k] = main_model_architecture_dict
+
+            # Prediction and evaluation
+            le = LabelEncoder()
+
+            final_out_dict = {}
+            # output_arrays_dict = {}
+            decoded_final_xtest_model_array_normalized_list_dict = {}
+            df_cm_models_dict = {}
+            cr_models_dict = {}
+            for single_model in models:
+                final_out = main_model_architecture_dict[single_model](torch.Tensor(single_preprocessing_res['X_test']).to(device), torch.Tensor(le.fit_transform(y_test)).to(device))
+
+                final_out_dict[single_model] = final_out
+
+                output_arrays = {sub_model: final_out['ensemble_outputs'][sub_model].cpu().detach().numpy() for sub_model in use_ensemble if use_ensemble[sub_model]}
+                # output_arrays_dict[single_model] = output_arrays
+
+                decoded_final_xtest_model_array_normalized_list = {}
+                df_cm_models = {}
+                cr_models = {}
+                for sub_model in use_ensemble:
+                    if use_ensemble[sub_model]:
+                        final_xtest_model_array_normalized = pd.DataFrame([np.argmax(x) for x in output_arrays[sub_model]])
+                        decoded_final_xtest_model_array_normalized = le.inverse_transform(final_xtest_model_array_normalized.values.ravel())
+                        decoded_final_xtest_model_array_normalized_list[sub_model] = decoded_final_xtest_model_array_normalized
+
+                        df_cm_model, cr_model = model_performance_report(y_real=y_test, y_pred=decoded_final_xtest_model_array_normalized, plot=False, title=f'model_{sub_model}')
+                        df_cm_models[sub_model] = df_cm_model
+                        cr_models[sub_model] = cr_model
+
+                decoded_final_xtest_model_array_normalized_list_dict[single_model] = decoded_final_xtest_model_array_normalized_list
+                df_cm_models_dict[single_model] = df_cm_models
+                cr_models_dict[single_model] = cr_models
+
+            final_outs[k] = decoded_final_xtest_model_array_normalized_list_dict
+            final_res[k] = {'cm': df_cm_models_dict, 'cr': cr_models_dict, 'cm_single': df_cm_single_models,
+                            'cr_single': cr_single_models, 'final_out_dict': final_out_dict,
+                            }
+            k += 1
+
+        best_res = {
+            'final_outs': final_outs,
+            'final_res': final_res,
+            'data_split': data_split,
+            # 'single_preprocessing_reses': single_preprocessing_reses, 'single_resampling_reses': single_resampling_reses,
+            # 'main_model_architectures': main_model_architectures_dict_nested,
+            # 'Ordered_centers_indexes': Ordered_centers_indexes, 'signed_base_classifires': signed_base_classifires_dict
+        }
+        return {'phi': phi, 'n_c': n_c, 'best_res_nested': best_res}
+    except Exception as e:
+        print(f"Error processing combination (n_c={n_c}, phi={phi}): {e}")
+        return {'phi': phi, 'n_c': n_c, 'best_res_nested': None}
+
+# Parallel processing
+combinations = [(n_c, phi) for n_c in n_c_list for phi in phi_list]
+
+pbar = tqdm(total=len(combinations), desc="----------------------------------Overall Progress----------------------------------",
+ position=0, leave=True, unit='combination', colour='green')
+results = Parallel(n_jobs=-1, backend='loky')(delayed(process_combination)(n_c, phi) for n_c, phi in combinations)
+
+
+
+with open('Results/last_results.pkl', 'wb') as f:
+  pickle.dump(results, f)
+
+pbar.close()
