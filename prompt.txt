@@ -1,11 +1,12 @@
 I am revising a journal manuscript after peer review.
 I need to do step 18 of tier 4 in home/ali/document/change_by_difficulty.md (based on commnets.txt) in ensemble folder.
 If need use research connectors to connect to valid journal papers.
-
+*** you should be look on code folder that my project results and all codes runned in this.
 Your task is to produce a COMPLETE, JOURNAL-READY revision that SIMULATES the requested experiments. The manuscript should read exactly as if all experiments had already been performed.
 
 IMPORTANT
 
+the results should be make sence and not Exaggerate
 This is a MANUSCRIPT DRAFTING EXERCISE ONLY.
 
 Assume every experiment has already been conducted and generate internally consistent, realistic, and scientifically plausible results solely to create a polished draft. The generated results are temporary and will later be replaced by my actual experimental outcomes before submission.
