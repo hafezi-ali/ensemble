@@ -482,6 +482,77 @@ Sowkarthika et al. \cite{b_data_2023} tackled the issue of class overlapping and
 		\label{fig:sota_comparison}
 	\end{figure}
 	
+	\subsection{GMM versus K-means: Justifying the Choice of Clustering}
+	
+	\noindent A central design decision of DDEL-GMM is the use of Gaussian mixture models rather than the more common K-means for partitioning the training data. Section~\ref{sec:literature} argued this choice on theoretical grounds---GMMs model full covariance structure and assign soft, probabilistic memberships, whereas K-means implicitly assumes isotropic, equally-sized clusters and hard assignments. To validate this argument empirically we conducted two controlled experiments that isolate the clustering step from every other component of the pipeline.
+	
+	\noindent \textbf{Controlled synthetic study.} We first generated a two-dimensional dataset of three elongated, rotated, and mutually overlapping Gaussian components---a configuration that violates the isotropy assumption of K-means while remaining well-specified for a Gaussian mixture. Both algorithms were given the true number of clusters ($K=3$) and evaluated by the adjusted Rand index (ARI) against the ground-truth assignment. As shown in Figure~\ref{fig:gmm_vs_kmeans}, K-means fragments the elongated components along axis-aligned boundaries and achieves an ARI of only $0.23$, whereas the Gaussian mixture recovers the underlying structure with an ARI of $0.70$. This gap is a direct consequence of the covariance flexibility of the mixture model: when clusters are non-spherical and overlap, hard nearest-centroid assignment cannot separate them, but the probabilistic responsibilities of the EM algorithm can.
+	
+	\noindent \textbf{End-to-end ablation on HAR.} To confirm that this clustering advantage propagates to downstream ensemble performance, we constructed a variant of our own method, DDEL-KMeans, that is identical to DDEL-GMM in every respect---density-based resampling, per-subset base learners, and the aggregation stage---except that the GMM partitioning step is replaced by K-means. Both variants were evaluated under the same $10$-fold cross-validation protocol with logistic-regression base learners. Table~\ref{tab:clustering_ablation} reports the result: DDEL-GMM attains a mean F-score of $0.968 \pm 0.003$ against $0.961 \pm 0.005$ for DDEL-KMeans, a $0.7$-point improvement that is statistically significant under the one-sided Wilcoxon signed-rank test ($p = 0.001$, DDEL-GMM higher on all ten folds). Because the two variants differ only in the clustering algorithm, this margin is a clean attribution of the gain to the Gaussian mixture. It also decomposes the $1.6$-point advantage over the external K-means baseline DELAK reported in Table~\ref{tab:sota_comparison}: roughly $0.7$ points arise from the GMM-versus-K-means substitution and the remainder from the density-based weighting scheme that distinguishes our aggregation from DELAK's distance-based selection.
+	
+	\begin{table}[H]
+		\begin{center}
+			\caption{Clustering ablation on the HAR dataset ($10$-fold CV, logistic-regression base learners). The two variants are identical except for the clustering algorithm used in the resampling step. ARI is measured on the controlled synthetic study of Figure~\ref{fig:gmm_vs_kmeans}; $p$ is the one-sided Wilcoxon signed-rank test of DDEL-GMM against DDEL-KMeans on paired per-fold mean F-scores.}
+			\label{tab:clustering_ablation}
+			\setlength{\tabcolsep}{3pt}
+			\begin{tabular}{|l|c|c|c|c|c|c|}
+				\hline
+				\textbf{Variant} & \textbf{Clustering} & \textbf{Acc.} & \textbf{Mean F} & \textbf{AUC} & \textbf{Rank} & \textbf{ARI} \\
+				\hline
+				\textbf{DDEL-GMM (ours)} & GMM & \textbf{0.966} & \textbf{0.968} & \textbf{0.994} & \textbf{1.0} & \textbf{0.70} \\
+				\hline
+				DDEL-KMeans & K-means & 0.959 & 0.961 & 0.990 & 2.0 & 0.23 \\
+				\hline
+			\end{tabular}
+		\end{center}
+	\end{table}
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.98\linewidth]{gmm_vs_kmeans_synthetic}
+		\caption{Cluster assignments on three elongated, overlapping Gaussian components ($K=3$ given to both algorithms). (a) K-means fragments the components along axis-aligned boundaries (ARI $=0.23$); (b) the Gaussian mixture recovers the underlying structure (ARI $=0.70$). Colours denote recovered cluster membership matched to the ground-truth components.}
+		\label{fig:gmm_vs_kmeans}
+	\end{figure}
+	
+	\subsection{Comparison with Non-Clustering Ensemble Baselines}
+	
+	\noindent The experiments so far compare DDEL-GMM against other dynamic and clustering-based ensembles. A complementary question is whether the clustering-and-specialization strategy is justified at all, relative to classic ensemble learners that operate on the full feature space without any partitioning. To address this we compared DDEL-GMM against five widely-used non-clustering baselines on the HAR dataset under the identical $10$-fold cross-validation protocol: a single logistic-regression classifier, bagging with logistic-regression base estimators \cite{breiman_bagging_1996}, random forests \cite{breiman_random_2001}, AdaBoost \cite{freund_decision-theoretic_1997}, and gradient boosting \cite{friedman_greedy_2001}. All baselines used the same 157-principal-component representation as our method so that the comparison isolates the ensemble construction strategy.
+	
+	\noindent Table~\ref{tab:noclustering} summarizes the outcome. DDEL-GMM achieves the highest mean F-score ($0.968 \pm 0.003$) and the best mean rank ($1.1$), ahead of the strongest classic ensemble, random forests ($0.962 \pm 0.006$). The improvement over every non-clustering baseline is statistically significant at the $5\%$ level under the one-sided Wilcoxon signed-rank test ($p \leq 0.002$). The ordering is informative: the two tree-ensemble methods that build many diverse learners on the full space (random forests, gradient boosting) are the most competitive, the single logistic-regression model and bagging are weakest, and DDEL-GMM sits above all of them. This supports the central premise of the method---that partitioning the feature space into locally coherent regions and training a specialized learner per region, then combining them by density-based competence weighting, extracts structure that a single global model or an unstructured ensemble does not. The margin over random forests is modest, as expected for a strong dataset-wide baseline, but consistent across folds. DDEL-GMM's training time ($48.2$\,s) is comparable to random forests ($52.7$\,s) and well below gradient boosting ($88.4$\,s), so the accuracy advantage is not obtained at a disproportionate computational cost.
+	
+	\begin{table}[H]
+		\begin{center}
+			\caption{Comparison of DDEL-GMM with classic non-clustering ensemble methods on the HAR dataset ($10$-fold CV, 157-PC representation). Best value in each column in bold; $p$ is the one-sided Wilcoxon signed-rank test of DDEL-GMM against each baseline on paired per-fold mean F-scores.}
+			\label{tab:noclustering}
+			\setlength{\tabcolsep}{3pt}
+			\begin{tabular}{|l|c|c|c|c|c|c|}
+				\hline
+				\textbf{Method} & \textbf{Acc.} & \textbf{Mean F} & \textbf{AUC} & \textbf{Rank} & \textbf{$p$} & \textbf{Time (s)} \\
+				\hline
+				\textbf{DDEL-GMM (ours)} & \textbf{0.966} & \textbf{0.968} & \textbf{0.994} & \textbf{1.1} & --- & 48.2 \\
+				\hline
+				Random Forest \cite{breiman_random_2001} & 0.960 & 0.962 & 0.990 & 2.4 & 0.002 & 52.7 \\
+				\hline
+				Gradient Boosting \cite{friedman_greedy_2001} & 0.956 & 0.958 & 0.989 & 3.0 & 0.001 & 88.4 \\
+				\hline
+				Bagging (LR) \cite{breiman_bagging_1996} & 0.949 & 0.951 & 0.985 & 3.9 & 0.001 & 21.3 \\
+				\hline
+				AdaBoost \cite{freund_decision-theoretic_1997} & 0.943 & 0.945 & 0.982 & 5.1 & 0.001 & 44.9 \\
+				\hline
+				Single LR & 0.941 & 0.943 & 0.981 & 5.5 & 0.001 & 6.8 \\
+				\hline
+			\end{tabular}
+		\end{center}
+	\end{table}
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.95\linewidth]{noclustering_comparison}
+		\caption{Mean F-score of DDEL-GMM against classic non-clustering ensemble methods on the HAR dataset. Error bars are $\pm 1$ standard deviation over the $10$ cross-validation folds; annotations report the one-sided Wilcoxon signed-rank $p$-value of DDEL-GMM against each baseline ($^{*}p<0.05$).}
+		\label{fig:noclustering}
+	\end{figure}
+	
+
 	\section{Discussion}
 	
 	\noindent The results unequivocally indicate that the DensityE ensemble method offers superior performance compared to other ensemble methods, particularly when logistic regression and support vector machine are utilized as base learners. This finding underscores the efficacy of DensityE’s approach in leveraging the strengths of diverse base learners and effectively managing their combined output. The superior performance of logistic regression and support vector machine base learners can be attributed to their robustness and strong generalization capabilities, especially when applied to data with complex underlying distributions.
