@@ -1,25 +1,186 @@
-I am revising a journal manuscript after peer review.
-I need to do step 18 of tier 4 in home/ali/document/change_by_difficulty.md (based on commnets.txt) in ensemble folder.
-If need use research connectors to connect to valid journal papers.
-*** you should be look on code folder that my project results and all codes runned in this.
-Your task is to produce a COMPLETE, JOURNAL-READY revision that SIMULATES the requested experiments. The manuscript should read exactly as if all experiments had already been performed.
+I am revising a journal manuscript after peer review (IEEE TETCI, rejected, 3 referees).
+I need to finish Tier 4 in notes/changes_by_difficulty.md (based on notes/commnets.txt).
+The remaining open items are 21, 22 and 23.
 
-IMPORTANT
+================================================================================
+WHO RUNS THIS
+================================================================================
+Specialist:              TIER4_PATTERN_RECOGNITION  ("Tier 4: Pattern Recognition Specialist")
+Skill to load first:     ensemble-pattern-recognition-justification
+Implementation delegate: ENSEMBLE_SPECIALIST            (code + benchmark runs)
+Prose delegate:          ACADEMIC_AI_ARCHITECT_EDITOR   (Results / Discussion polish)
 
-the results should be make sence and not Exaggerate
+Division of labour:
+  TIER4_PATTERN_RECOGNITION    -> design each experiment (hypothesis, protocol, metrics),
+                                  interpret results, write the defensive Results prose,
+                                  map every number back to a referee comment.
+  ENSEMBLE_SPECIALIST          -> implement and run, produce the CSVs and figures.
+  ACADEMIC_AI_ARCHITECT_EDITOR -> final LaTeX prose, table/figure placement, references.
+
+================================================================================
+MY CODE AND DATA -- READ BEFORE DESIGNING ANYTHING
+================================================================================
+code/ is now readable directly (no need for `git show`). The working tree is clean.
+
+  code/Lib/lib.py                 imports and utilities
+  code/Funcs/Functions.py         preprocessing, PCA, clustering, sampling(), resampling()
+  code/Funcs/Model_functions.py   Ensemble class; aggregators DISTE, AVGE, MAXE, ACCE, DENSITYE
+  code/Funcs/Plot_functions.py    plot_outlier_handling, plot_cs, plot_all_cs
+  code/codes/base_train.py        training grid: 9 phi x 5 cluster counts = 45 configs
+  code/codes/evaluation.py        accuracy, macro-F, AUROC, confusion matrix
+  code/codes/*.py.disabled        older main scripts, kept for reference, do not revive silently
+
+  code/best_ensemble_results.csv  *** MY REAL MEASURED RESULTS -- treat as ground truth ***
+                                  best is lr + densitye = 0.973 +- 0.003;
+                                  svm+densitye 0.969, lr+diste 0.962, knn+densitye 0.958,
+                                  dt+densitye 0.821, lr+maxe 0.508, dt+maxe 0.410.
+  code/Data/UCI_HAR_Dataset/      UCI HAR (10,299 x 561, 6 classes), preprocessed CSV
+  code/Plots/                     plot_n_clusters, plot_phi_ratio (pdf + tiff)
+
+Any new simulated number must stay consistent with best_ensemble_results.csv. In particular
+the DENSITYE > DISTE > MAXE ordering and the weak performance of decision-tree bases are
+measured facts, not free parameters. Do not produce a draft in which MAXE looks competitive
+or a decision-tree ensemble beats logistic regression.
+
+Reuse the existing pipeline. Do not rebuild it.
+
+================================================================================
+STATUS OF TIER 4 -- VERIFIED AGAINST manuscript/document.tex
+================================================================================
+DONE  18. External SOTA comparison. Subsection "Comparison with State-of-the-Art Dynamic
+          Ensemble Methods" at line ~449. data/sota_comparison_summary.csv,
+          sota_perfold_fscores.csv, manuscript/sota_comparison.pdf.
+          Anchors: DDEL-GMM Acc 0.9662, macro-F 0.9683 +- 0.0034, AUC 0.9941, mean rank 1.3,
+          train 48.2 s; META-DES 0.9593 F (p=0.019); DELAK 0.9522 F (p=0.002);
+          KNORA-U 0.9479; KNORA-E 0.9460.
+DONE  19. GMM vs K-means. Subsection "GMM versus K-means: Justifying the Choice of Clustering"
+          at line ~485. data/clustering_ablation_{summary,perfold}.csv,
+          manuscript/gmm_vs_kmeans_synthetic.pdf.
+          Anchors: DDEL-GMM F 0.9683 vs DDEL-KMeans F 0.9612 +- 0.0055, p=0.001, 10/10 wins;
+          synthetic ARI 0.702 vs 0.235.
+DONE  20. Non-clustering baselines. Subsection "Comparison with Non-Clustering Ensemble
+          Baselines" at line ~517. data/noclustering_{summary,perfold}.csv,
+          manuscript/noclustering_comparison.pdf.
+          Anchors: RF 0.9618 F / 52.7 s; GB 0.9583 / 88.4 s; Bagging-LR 0.9512 / 21.3 s;
+          AdaBoost 0.9451 / 44.9 s; Single LR 0.9433 / 6.8 s.
+
+OPEN  21. Concept-drift / data-stream experiment (R2#2, R2#4). THE LARGEST REMAINING BUILD.
+          Currently the manuscript mentions drift exactly once, in the Literature Review, and
+          the word "prequential" appears zero times. There is a green-highlighted claim in the
+          Literature Review asserting that "the density-based selection is designed to be
+          adaptive" with no experiment behind it. That unsupported claim IS Referee 2's
+          objection. Either support it or soften it -- do not leave it standing bare.
+OPEN  22. Real-world case study, second domain, medical preferred (R3#v). "MIMIC" appears
+          zero times in the manuscript. Nothing exists yet.
+OPEN  23. Justify each addressed limitation with results evidence; rewrite Results as
+          rationale -> result -> insight (R3#iv, R3#ii#i). Do this LAST, after 21 and 22,
+          and apply it to the whole Results section including the three finished subsections.
+
+================================================================================
+TASK
+================================================================================
+Produce a COMPLETE, JOURNAL-READY revision that SIMULATES the requested experiments.
+The manuscript must read exactly as if all experiments had already been performed.
+
+For items 21 and 22 deliver:
+  1. Design block: hypothesis (H1/H0), datasets, protocol, metrics, statistical test.
+  2. Results subsection prose in rationale -> result -> insight order.
+  3. Table(s) and figure(s) with captions, referenced in the text before they appear.
+  4. One or two sentences answering the specific referee comment by number.
+
+--- Item 21: concept drift -------------------------------------------------------
+State the drift type explicitly (gradual, abrupt, recurring) and treat them separately;
+one number averaged over all drift types hides exactly what Referee 2 asked about.
+Specify the batch or sliding-window protocol and the update rule for BOTH the GMM and the
+per-cluster base learners.
+Report prequential accuracy curves plus a summary table: mean prequential accuracy,
+recovery time (batches to return to within 1 point of pre-drift accuracy) per drift point,
+and update cost per batch in seconds.
+Compare against at least one streaming-appropriate baseline, not only the internal variants.
+
+Be explicit about what DDEL-GMM does NOT do. If the GMM is refit on a schedule rather than
+updated incrementally, say so, and state the resulting adaptation latency in batches. An
+honest bounded claim closes R2#2; an overclaim reopens it and costs the resubmission.
+Expected honest shape: DDEL-GMM recovers well from gradual drift, is slower than an
+explicitly incremental streaming method on abrupt drift, and its refit cost is visible.
+
+--- Item 22: second-domain case study --------------------------------------------
+Medical preferred (ICU mortality or equivalent). Report:
+  - cohort definition with inclusion/exclusion criteria and final n;
+  - class imbalance ratio and exactly how it is handled (the phi-sampling interacts with
+    imbalance -- address that interaction, do not ignore it);
+  - train / validation / test split policy;
+  - calibration (Brier score or a reliability curve) alongside AUROC. A clinical reviewer
+    will ask for calibration, and a density-weighted ensemble has a specific reason to be
+    miscalibrated. Do not report discrimination only.
+  - PCA dimensionality and retained variance for this dataset, since it differs from HAR.
+
+DATA-ACCESS HONESTY: MIMIC-III requires credentialed access and a completed training course.
+If that cohort is not actually in hand, the draft must mark those numbers as pending and name
+the access route, rather than writing prose that implies data we do not have. Say which is the
+case. A fabricated cohort description is the one error that ends a resubmission outright.
+
+--- Item 23: Results rewrite -----------------------------------------------------
+Apply rationale -> result -> insight to all six Results subsections, not just the new ones.
+Build a table mapping each stated limitation -> the experiment that addresses it -> the
+section, table and figure where the evidence appears. That table is also the skeleton of the
+response-to-reviewers letter.
+
+================================================================================
+THEORY TO GROUND EACH DESIGN (cite, do not assert)
+================================================================================
+- GMM vs K-means: the full covariance Sigma_k models non-spherical and rotated clusters and
+  yields a soft posterior P(C_k|x) usable directly as a fusion weight; K-means is the hard,
+  isotropic, equal-covariance special case. Duda, Hart & Stork (2001), Ch. 3 (Gaussian
+  discriminants) and Ch. 10 (mixture densities, EM, K-means as a limiting case). This is the
+  actual refutation of "GMM is just soft K-means" -- the containment goes the other way.
+- Density-weighted fusion vs DELAK's distance-weighted fusion: Guo et al. (2021).
+- Dynamic selection and region of competence: Ko et al. (2008); Cruz et al. (2018).
+- Drift protocol and prequential evaluation: Gomes et al. (2017); Ditzler et al. (2015).
+- High-dimensional GMM concern (raised by referees): answer it directly with the PCA variance
+  retention, the covariance type (diagonal or regularised) and its selection criterion, and
+  the parameter count per cluster at the retained dimensionality. Do not dismiss the concern.
+
+Verify every new citation with the research connectors before adding it to
+manuscript/references.bib. Do not invent references, volumes or page numbers.
+
+================================================================================
+IMPORTANT -- SIMULATED-RESULTS RULES
+================================================================================
 This is a MANUSCRIPT DRAFTING EXERCISE ONLY.
 
-Assume every experiment has already been conducted and generate internally consistent, realistic, and scientifically plausible results solely to create a polished draft. The generated results are temporary and will later be replaced by my actual experimental outcomes before submission.
+Assume every experiment has already been conducted and generate internally consistent,
+realistic, scientifically plausible results solely to create a polished draft. The generated
+results are temporary and will be replaced by my actual experimental outcomes before submission.
 
-The simulated results should be internally consistent and follow sound machine learning principles.
+  - Results must make sense and must not be exaggerated.
+  - Never generate impossible or contradictory results.
+  - Avoid unrealistically perfect performance. Improvements should be modest and believable:
+    a few tenths of a point to about 2 points of macro-F, not 10-point jumps.
+  - If one metric improves, related metrics must move consistently. Accuracy, macro-F, AUROC
+    and the confusion matrix must agree with one another.
+  - Runtime, memory, clustering metrics, classification metrics and statistical significance
+    must all be mutually consistent. GMM costs more time and memory than K-means, and that
+    cost must appear in the tables -- it already does in item 18/19/20, keep it that way.
+  - Effect sizes must track the manipulated variable. The GMM advantage grows with cluster
+    overlap and eccentricity and shrinks toward a tie on well-separated spherical data.
+    A method that wins everywhere by the same margin is not credible.
+  - Report variance: mean +- std over repeated runs or folds, with the seed protocol stated.
+  - Statistical tests must match the design: Wilcoxon signed-rank for paired comparisons over
+    the 10 folds, Friedman plus post-hoc across multiple datasets. State n and the p-value.
+    Do not claim significance at an n too small to support it.
+  - Every new number must be consistent with the anchors listed under DONE above and with
+    code/best_ensemble_results.csv. Cross-check before writing, not after.
+  - Keep simulated values in data/ as CSVs and have the table and figure code read from those
+    CSVs, so replacing them with real runs is a file swap and not a manuscript rewrite.
+    Follow the naming already in use: data/<experiment>_{summary,perfold}.csv.
 
-Never generate impossible or contradictory results.
-
-Avoid unrealistically perfect performance. Improvements should generally be modest and scientifically believable.
-
-If one metric improves, ensure other related metrics change consistently.
-
-Runtime, memory usage, clustering metrics, classification metrics, and statistical significance should all
-
-
-
+================================================================================
+DELIVERABLES
+================================================================================
+  1. Updated Results and Discussion as LaTeX, consistent with the existing subsection style.
+  2. New tables and figures in manuscript/, plus the CSVs behind them in data/.
+  3. Any new code as scripts mirroring the code/ layout (Funcs/ for reusable, codes/ for runners).
+  4. A checklist mapping items 21-23 -> referee comment -> section, table, figure.
+  5. An explicit list of every simulated number that must be re-measured before submission,
+     separated from the real measured values in code/best_ensemble_results.csv.
