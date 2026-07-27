@@ -331,7 +331,7 @@ Sowkarthika et al. \cite{b_data_2023} tackled the issue of class overlapping and
 	\subsection{Ensemble Method Performance Analysis}
 	
 	\noindent Table \ref{tab:ensemble_comparison} reveals that the DensityE ensemble method consistently achieves the highest mean scores across most base learners. Specifically, the logistic regression base learner combined with the DensityE method attains a mean score of 0.973, closely followed by the support vector machine base learner with a mean score of 0.969. The k-nearest neighbors base learner also performs well under the DensityE method, achieving a mean score of 0.958.
-	Conversely, the decision tree base learner shows significantly lower performance across all ensemble methods, with the highest mean score of 0.838
+	Conversely, the decision tree base learner shows significantly lower performance across all ensemble methods, with the highest mean score of 0.841
 	observed under the DistE method.
 	
 	% --- Start of changes ---
@@ -364,13 +364,13 @@ Sowkarthika et al. \cite{b_data_2023} tackled the issue of class overlapping and
 				
 				\hline 
 				
-				\textbf{DistE} & lr & 0.911 & 0.048 & 0.958 \\
+				\textbf{DistE} & lr & 0.962 & 0.043 & 0.977 \\
 				
-				& svm & 0.904 & 0.045 & 0.951 \\
+				& svm & 0.959 & 0.040 & 0.974 \\
 				
-				& knn & 0.885 & 0.037 & 0.929 \\
+				& knn & 0.948 & 0.031 & 0.966 \\
 				
-				& dt & 0.838 & 0.019 & 0.860 \\
+				& dt & 0.841 & 0.016 & 0.864 \\
 				
 				\hline 
 				
@@ -400,8 +400,19 @@ Sowkarthika et al. \cite{b_data_2023} tackled the issue of class overlapping and
 		
 	\end{table}
 	
-	The DistE method trails DensityE by a clear margin for the logistic regression, support vector machine, and k-nearest neighbors base learners, achieving mean
-	scores of only 0.911 and 0.904 with logistic regression and support vector machine, respectively—roughly six points below the corresponding DensityE scores. The sole exception is the decision tree base learner, where DistE (0.838) marginally exceeds DensityE (0.821); this weak-learner regime is where both methods perform worst overall and the choice of weighting scheme matters least. This gap indicates that a simple distance-based weighting of classifier contributions is markedly less effective than the density-based scheme, which accounts for the full probabilistic geometry of each subset rather than proximity alone. The AvgE and MaxE methods demonstrate still lower performance across all base learners. The
+	The DistE method trails DensityE by approximately one point in mean F-score for the logistic
+	regression ($0.962$ versus $0.973$), support vector machine ($0.959$ versus $0.969$), and
+	$k$-nearest-neighbour ($0.948$ versus $0.958$) base learners. The sole exception is the decision
+	tree base learner, where DistE ($0.841$) marginally exceeds DensityE ($0.821$); this weak-learner
+	regime is where both methods perform worst overall and the choice of weighting scheme matters
+	least. The separation in mean is therefore modest, and Figure~\ref{fig:boxplot_comparison} shows
+	the per-fold distributions of the two schemes overlapping for every base learner. The substantive
+	difference is in dispersion rather than central tendency: across the ten outer folds DensityE
+	attains a standard deviation of $0.003$ against $0.043$ for DistE with logistic regression, a
+	fourteen-fold reduction, and the DistE distributions carry low-side outlier folds that the
+	density-weighted scheme does not produce. Accounting for the full probabilistic geometry of each
+	subset rather than proximity alone thus buys stability across resamplings more than it buys
+	accuracy on this dataset. The AvgE and MaxE methods demonstrate still lower performance across all base learners. The
 	AvgE method performs moderately well with support vector machine and
 	k-nearest neighbors, achieving mean scores of 0.897 and 0.856, respectively.
 	The MaxE method shows the least effective performance, especially with the
@@ -443,6 +454,22 @@ Sowkarthika et al. \cite{b_data_2023} tackled the issue of class overlapping and
 	
 	\begin{figure*}[t!]
 		\centering
+		\includegraphics[width=0.86\linewidth]{boxplot_comparison_v2}
+		\caption{Per-fold distribution of the weighted $F_1$-score over the ten outer
+		cross-validation folds at the selected configuration ($n_c = 6$, $\varphi = 0.5$), for the
+		density-weighted (DensityE) and distance-weighted (DistE) aggregation schemes with each
+		base learner, together with the single-SVM reference. Boxes span the interquartile range,
+		the horizontal rule is the median, red crosses mark the mean, and circles are folds beyond
+		$1.5\times$IQR. The two clustering-based schemes overlap for every base learner, but
+		DensityE is markedly more concentrated: its interquartile ranges are narrower and it
+		produces no low-side outlier folds. The decision-tree learner is omitted; its scores lie
+		near $0.82$ and fall outside the plotted range (see
+		Table~\ref{tab:ensemble_comparison}).}
+		\label{fig:boxplot_comparison}
+	\end{figure*}
+	
+	\begin{figure*}[t!]
+		\centering
 		\includegraphics[width=0.7\linewidth]{fscore_vs_clusters}
 		\caption{F-score vs Number of Clusters for Density ensemble method}
 		\label{fig:fscore_vs_clusters}
@@ -464,7 +491,13 @@ Sowkarthika et al. \cite{b_data_2023} tackled the issue of class overlapping and
 	well below the level reached by the other three learners. The pattern indicates that density
 	weighting helps when the base learners are stable enough that their disagreement carries usable
 	information, and that a maximum-responsibility rule, which discards all but one learner per query,
-	forfeits the ensemble entirely.
+	forfeits the ensemble entirely. Figure~\ref{fig:boxplot_comparison} resolves the two leading
+	schemes at the fold level: the DensityE and DistE distributions overlap for every base learner,
+	so the one-point separation in mean should not be read as a decisive accuracy advantage, but
+	DensityE is the tighter of the two by a wide margin and is the only one of the two free of
+	low-side outlier folds. Both clustering-based schemes sit well above the single-SVM reference,
+	whose fold-to-fold spread (interquartile range $0.915$--$0.937$) is an order of magnitude wider
+	than that of either ensemble.
 	
 	
 	\subsection{Comparison with State-of-the-Art Dynamic Ensemble Methods}
