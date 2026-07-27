@@ -125,6 +125,30 @@ Sowkarthika et al. \cite{b_data_2023} tackled the issue of class overlapping and
 	
 	\noindent This paper proposes a novel dynamic ensemble model, the Density-Based Dynamic Ensemble Learning algorithm via Gaussian Mixture Model clustering (DDEL-GMM). \greenhighlight{DDEL-GMM is designed to enhance predictive accuracy in providing personalized predictions.} By employing Gaussian Mixture Models (GMM) for clustering and a density-based decision-making approach, \greenhighlight{the model aims to achieve} a more granular analysis of complex data distributions and \greenhighlight{provide} a robust framework for classifier competence estimation.
 	
+	Figure~\ref{fig:overview} summarises the method and the two empirical facts that govern its behaviour.
+	Panel~(a) traces the pipeline. Panel~(b) reports the outcome of the aggregation comparison developed
+	in Section~\ref{sec:results}: density weighting is the strongest of the rules considered here.
+	Panel~(c) records the mechanism behind that outcome and its limit---the density weighting can only
+	act on genuine disagreement between the base learners, and that disagreement is controlled by the
+	sampling ratio $\phi$.
+	
+	\begin{figure*}[!t]
+		\centering
+		\includegraphics[width=\linewidth]{fig1_overview}
+		\caption{Overview of DDEL-GMM. (a) Pipeline: a Gaussian mixture with full covariances $\Sigma_k$
+		partitions the $157$-dimensional principal-component representation of the HAR data; each
+		component resamples a fraction $\phi$ of the training rows to fit one base learner $f_k$; at
+		inference the mixture responsibilities of the query $x^{*}$ weight the learners' outputs.
+		(b) Mean F-score by base learner and aggregation rule (error bars $\pm 1$ SD across
+		cross-validation folds); DensityE leads for the lr, svm and knn learners, while the
+		maximum-responsibility rule MaxE, which retains a single learner per query, degrades sharply.
+		(c) Diversity diagnostic: as $\phi$ rises the resampled subsets overlap more and base-learner
+		disagreement falls below $1\%$ at the originally published $\phi = 0.9$, where the ensemble is
+		effectively a single classifier; the cross-validated operating point $\phi = 0.4$ retains
+		$63$--$65\%$ disagreement.}
+		\label{fig:overview}
+	\end{figure*}
+	
 	As illustrated in Figure \ref{fig:training_phase_diagram}, the training phase of \greenhighlight{DDEL-GMM} involves leveraging GMM to effectively capture the underlying structure of the data. This approach facilitates the creation of specialized classifiers that are adept at recognizing specific data patterns within complex and overlapping distributions.
 	
 	\begin{figure*}[!t]
@@ -298,7 +322,7 @@ Sowkarthika et al. \cite{b_data_2023} tackled the issue of class overlapping and
 	In summation, the Density-based Dynamic Ensemble methodology infuses ensemble learning with a level of sensitivity and adaptability, ensuring that predictions are both accurate and attuned to the intricacies of the
 	dataset’s distribution.
 	
-	\section{Results and Analysis}
+	\section{Results and Analysis}\label{sec:results}
 	
 	\noindent To evaluate the effectiveness of the four ensemble methods, this study employs several key performance metrics. The primary metric for assessing classification performance is the \textbf{F-score}, which provides a balanced measure of precision and recall. To understand the consistency and robustness of the methods, the \textbf{mean}, \textbf{standard deviation}, and \textbf{maximum} of the F-scores obtained from cross-validation are also reported. These metrics collectively offer a comprehensive view of each model's accuracy, stability, and peak performance.
 	
@@ -431,20 +455,17 @@ Sowkarthika et al. \cite{b_data_2023} tackled the issue of class overlapping and
 		\label{fig:fscore_vs_phi}
 	\end{figure*}
 	
-	Figure \ref{fig:boxplot_comparison} provides a visual representation of the distribution of scores for
-	each ensemble method and base learner combination. This figure reinforces
-	the tabulated results, highlighting the overall superior performance of the
-	DensityE method, which sits clearly above DistE. The variability in scores is also depicted,
-	with DensityE showing the tightest distribution, followed by DistE, while AvgE
-	and MaxE are both lower and more dispersed. Notably, the single SVM model achieves a high and consistent
-	performance, underscoring the robustness of SVM as a standalone model.
+	Figure \ref{fig:overview}(b) summarises these aggregation results visually. Across the three
+	learners for which the framework is effective (lr, svm, knn), DensityE attains the highest mean
+	F-score and the smallest dispersion, DistE follows within one standard deviation, and MaxE degrades
+	sharply and erratically---its standard deviation reaches $0.143$ for the decision-tree learner
+	against $0.010$ for DensityE. The decision tree is the single exception to the ordering: under a
+	decision-tree base learner DistE ($0.841$) marginally exceeds DensityE ($0.821$), and both remain
+	well below the level reached by the other three learners. The pattern indicates that density
+	weighting helps when the base learners are stable enough that their disagreement carries usable
+	information, and that a maximum-responsibility rule, which discards all but one learner per query,
+	forfeits the ensemble entirely.
 	
-	\begin{figure*}[!t]
-		\centering
-		\includegraphics[width=0.7\linewidth]{boxplot_comparison}
-		\caption{Comparison of F-score Distributions Across Different Ensemble Methods and Base Learners}
-		\label{fig:boxplot_comparison}
-	\end{figure*}
 	
 	\subsection{Comparison with State-of-the-Art Dynamic Ensemble Methods}
 	
@@ -570,7 +591,7 @@ Sowkarthika et al. \cite{b_data_2023} tackled the issue of class overlapping and
 		\begin{figure*}[!t]
 			\centering
 			\includegraphics[width=0.95\linewidth]{noclustering_comparison}
-			\caption{DDEL-GMM against classic non-clustering ensemble methods on the HAR dataset, from measured per-fold results. (a)~Distribution of macro F-scores over the $10$ stratified cross-validation folds; the white diamond marks the mean. The four leftmost methods overlap substantially. (b)~Mean Friedman rank with the Nemenyi critical difference at $\alpha=0.05$ ($\mathrm{CD}=2.85$, $k=7$, $N=10$); the dashed line marks the threshold beyond which a baseline is separated from DDEL-GMM. Only random forests and AdaBoost fall beyond it.}
+			\caption{DDEL-GMM against classic non-clustering ensemble methods on the HAR dataset, from measured per-fold results. (a)~Distribution of macro F-scores over the $10$ stratified cross-validation folds; the white diamond marks the mean. The four leftmost methods overlap substantially. (b)~Mean Friedman rank with the Nemenyi critical difference at $\alpha=0.05$ ($\mathrm{CD}=2.85$, $k=7$, $N=10$); the dashed line marks the threshold beyond which a baseline is separated from DDEL-GMM. Gradient boosting, random forests, and AdaBoost fall beyond it; bagging, the single logistic-regression model, and the support vector machine do not.}
 			\label{fig:noclustering}
 		\end{figure*}
 
