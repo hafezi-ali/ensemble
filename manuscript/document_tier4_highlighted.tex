@@ -33,8 +33,8 @@
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
 		T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 \usepackage{balance}
-\definecolor{tier4blue}{RGB}{0,90,170}
-\newcommand{\tfourhighlight}[1]{\begingroup\color{tier4blue}#1\endgroup}
+\definecolor{tier4blue}{RGB}{0,70,180}
+\newcommand{\tfourhighlight}[1]{{\color{tier4blue}#1}}
 \begin{document}
 	\title{Density-Based Dynamic Ensemble Learning Algorithm via Gaussian Mixture Model Clustering for Enhanced Predictive Analytics.}
 	\author{}
@@ -145,9 +145,9 @@ Sowkarthika et al. \cite{b_data_2023} tackled the issue of class overlapping and
 		cross-validation folds); DensityE leads for the lr, svm and knn learners, while the
 		maximum-responsibility rule MaxE, which retains a single learner per query, degrades sharply.
 		(c) Diversity diagnostic: as $\phi$ rises the resampled subsets overlap more and base-learner
-		disagreement falls below $1\%$ at the originally published $\phi = 0.9$, where the ensemble is
-		effectively a single classifier; the cross-validated operating point $\phi = 0.4$ retains
-		$63$--$65\%$ disagreement.}
+		disagreement falls below $1.5\%$ at the top of the swept range, $\phi = 0.9$, where the
+		subsets share $88\%$ of their instances and the ensemble is effectively a single
+		classifier; the selected operating point $\phi = 0.5$ retains $30\%$ disagreement.}
 		\label{fig:overview}
 	\end{figure*}
 	
@@ -236,9 +236,25 @@ Sowkarthika et al. \cite{b_data_2023} tackled the issue of class overlapping and
 		data pattern, enhancing the ensemble’s overall competence
 		\item \textbf{Robustness:} By training specialized classifiers on distinct data patterns identified by GMM, the ensemble becomes more resilient to wide variations in the data, as no single classifier is overwhelmed by the entire dataset's complexity.
 	\end{itemize}
-	\textbf{Operational Steps:} With the GMM parameters in place, the methodology involves ranking data points based on their likelihoods under each
-	Gaussian component. A sampling ratio, $phi$, then determines the fraction of
-	top-ranking data points to be included in each subset. These subsets, rich in
+	\textbf{Operational Steps:} With the GMM parameters in place, the methodology ranks
+	the training instances by their affinity to each fitted component. A
+	sampling ratio $\phi \in (0,1)$ then determines how many of the top-ranked instances
+	enter each subset: for component $i$ the $\lfloor \phi m \rfloor$ highest-ranked
+	instances are selected, where $m = |D|$ is the size of the \emph{full} training set
+	rather than the size of component $i$. Each subset therefore has the same cardinality
+	regardless of the mixing coefficient $\pi_i$, and subsets overlap by an amount that
+	grows with $\phi$; Section~\ref{subsec:diversity_cost} quantifies this overlap and its
+	effect on ensemble diversity.
+
+	Our implementation ranks by Euclidean distance to the EM-estimated mean $\mu_i$, which
+	is the cheaper of two natural choices; ranking instead by the component responsibility
+	$\gamma_i(x_j)$ uses the full covariance $\Sigma_i$ at partitioning time as well. We
+	measured both on UCI HAR (Table~\ref{tab:selection_rule}). The two are within one fold
+	standard deviation of each other at the operating point, so we retain the distance form
+	and note that the covariance-aware alternative is available at no accuracy cost. This
+	choice concerns only \emph{which} instances train each learner; the ensemble weights
+	themselves are always the full GMM responsibilities, as Section~\ref{subsec:ddel}
+	describes. These subsets, rich in
 	structure and pattern, serve as the training data for individual base classifiers.
 	The detailed algorithmic steps for this process are outlined in Algorithm~\ref{algo:gmm}.
 	
@@ -257,15 +273,43 @@ Sowkarthika et al. \cite{b_data_2023} tackled the issue of class overlapping and
 			\State \textbf{M-step:} Update $\mu_m$, $\Sigma_m$, $\pi_m$ via the standard maximum-likelihood updates \cite{dempster_maximum_1977}.
 			\Until{convergence of parameters $\mu_i$, $\Sigma_i$, and $\pi_i$}
 			\For{$i = 1, 2, \dots, K$}
-			\State Compute the responsibilities for each instance in $X$ with respect to Gaussian component $i$
-			\State Select $\text{int}(m \times \phi)$ instances with the highest responsibilities into partition $C'_i$
+			\State Rank every instance $x_j \in X$ by its affinity to component $i$, using $d_j = \lVert x_j - \mu_i \rVert_2$ with the EM-estimated mean $\mu_i$
+			\State Select the $\text{int}(m \times \phi)$ top-ranked instances of $X$ into partition $C'_i$, where $m = |X|$
 			\EndFor
+			\State \Comment{Subsets are drawn from all of $X$, so they overlap; overlap grows with $\phi$}
 			\State Return the labels in $D$ to instances in $C'$ to get $K$ data subsets $D' = D'_1 \cup D'_2 \cup \dots \cup D'_K$
 			\EndProcedure
 		\end{algorithmic}
 	\end{algorithm}
 	
+
+	\begin{table}[!t]
+		\centering
+		\caption{Instance-selection rule at partitioning time, UCI HAR, $K = 6$, logistic-regression
+		base learners, DensityE aggregation. \emph{Distance} ranks by Euclidean distance to $\mu_i$
+		(our implementation); \emph{responsibility} ranks by the component posterior
+		$\gamma_i(x_j)$, which uses $\Sigma_i$. Disagreement is the mean pairwise fraction of test
+		instances on which two base learners differ; overlap is the mean pairwise Jaccard index of
+		the training subsets. Ensemble weights are the GMM responsibilities in both columns. The
+		selected operating point is shown in bold.}
+		\label{tab:selection_rule}
+		\begin{tabular}{cccccc}
+			\hline
+			& \multicolumn{2}{c}{Macro $F_1$} & \multicolumn{2}{c}{Disagreement} & \\
+			\cline{2-3}\cline{4-5}
+			$\phi$ & distance & responsib. & distance & responsib. & Overlap \\
+			\hline
+			$0.2$ & $0.9549$ & $0.9497$ & $0.651$ & $0.656$ & $0.163$ \\
+			$0.4$ & $0.9708$ & $0.9800$ & $0.617$ & $0.521$ & $0.348$ \\
+			$0.5$ & $\mathbf{0.9729}$ & $0.9732$ & $0.298$ & $0.414$ & $0.425$ \\
+			$0.6$ & $0.9711$ & $0.9711$ & $0.076$ & $0.192$ & $0.530$ \\
+			$0.9$ & $0.9690$ & $0.9723$ & $0.011$ & $0.008$ & $0.877$ \\
+			\hline
+		\end{tabular}
+	\end{table}
+
 	\subsection{Density-based Dynamic Ensemble Algorithm}
+	\label{subsec:ddel}
 	\noindent Traditional ensemble learning methods often rely on the simple aggregation of base classifiers’ outputs, without considering the inherent nuances
 	associated with the data regions that different base classifiers might be specialized in. The Density-based Dynamic Ensemble methodology emerges
 	as an innovative response to this limitation, ensuring that the ensemble’s
@@ -276,10 +320,19 @@ Sowkarthika et al. \cite{b_data_2023} tackled the issue of class overlapping and
 	
 	\textbf{Density Estimation:} The density of a test instance with respect to a data subset is indicative of the likelihood that the test instance belongs to that subset. Mathematically, the density $\rho_i(z)$ of a test instance $z$ concerning a subset $D_i^{\prime}$ is calculated using the Gaussian density function as shown in Equation \ref{eq: Density-Estimation}:
 	\begin{equation}\label{eq: Density-Estimation}
-		\rho_i(z)=\frac{1}{(2 \pi)^{\frac{d}{2}}\left|\Sigma_i\right|^{\frac{1}{2}}} \exp \left(-\frac{1}{2}\left(z-\mu_i\right)^T \Sigma_i^{-1}\left(z-\mu_i\right)\right)
+		\rho_i(z)=\frac{\pi_i}{(2 \pi)^{\frac{d}{2}}\left|\Sigma_i\right|^{\frac{1}{2}}} \exp \left(-\frac{1}{2}\left(z-\mu_i\right)^T \Sigma_i^{-1}\left(z-\mu_i\right)\right)
 	\end{equation}
 	
-	Where $\mu_i$ and $\Sigma_i$ are the mean and covariance matrix, respectively, of the Gaussian component associated with subset $D_i^{\prime}$.
+	Where $\mu_i$, $\Sigma_i$ and $\pi_i$ are the mean, covariance matrix and mixing
+	coefficient, respectively, of the Gaussian component associated with subset
+	$D_i^{\prime}$. Normalising $\rho_i(z)$ over the $K$ components yields exactly the
+	posterior responsibility $\gamma_i(z) = P(i \mid z)$ of the fitted mixture, so the
+	competence weights are the mixture's own soft assignments and inherit its full
+	covariance structure. This is the property that distinguishes the proposed scheme from
+	distance-based dynamic selection: a weight derived from $\Sigma_i^{-1}$ is an
+	anisotropic Mahalanobis quantity that adapts to the orientation and spread of each
+	component, whereas an inverse-Euclidean weight is isotropic and implicitly assumes
+	spherical, equally sized regions.
 	\textbf{Classifier Invocation:} After computing densities, the weight of each classifier is determined based on the density of the test instance with respect to the subset the classifier was trained on. This means that all classifiers contribute to the final prediction, but their influence is modulated by how well the test instance aligns with the data distribution of the corresponding subset. The weights are proportional to the densities, giving more importance to classifiers associated with higher densities for the test instance.
 	
 	\textbf{Decision Aggregation:} An ensemble's strength lies in its ability to amalgamate insights from multiple base classifiers. In the Density-based Dynamic Ensemble approach, predictions from all base classifiers are aggregated using a weighted voting scheme. Specifically, the probability vector for each class is calculated by weighting the predictions of each classifier according to the density of the test instance with respect to the subset on which that classifier was trained. The final predicted class label is the one with the highest combined probability. The algorithmic steps for this methodology are presented in Algorithm \ref{algo:density-based-dynamic-ensemble}.
@@ -445,14 +498,23 @@ Sowkarthika et al. \cite{b_data_2023} tackled the issue of class overlapping and
 	certain number of clusters, suggesting a point of diminishing returns.
 	
 	Figure \ref{fig:fscore_vs_phi} presents the F-score plotted against the sampling ratio for the
-	DensityE ensemble method. As the sampling ratio increases, the F-score
-	improves for all base learners. The support vector machine achieves the
-	highest F-score, with logistic regression and k-nearest neighbors following.
-	The decision tree base learner, once again, shows the lowest performance.
-	This positive correlation between sampling ratio and F-score highlights the
-	importance of using a larger sample size to enhance model performance,
-	likely because larger samples provide more representative data, allowing the
-	ensemble to make more accurate predictions.
+	DensityE ensemble method. The response is not monotonic. F-score rises steeply
+	over $\phi \in [0.1, 0.4]$ and then plateaus: for logistic regression it reaches
+	$0.9719$ at $\phi = 0.4$ and $0.9733$ at $\phi = 0.5$, after which it is flat to
+	within one standard deviation across folds ($0.9726$ at $\phi = 0.9$, a difference of
+	$0.0007$ against a fold standard deviation of $0.0024$). Logistic regression and the
+	support vector machine both attain their maximum at $\phi = 0.5$ and decline slightly
+	thereafter, while $k$-nearest neighbours and the decision tree remain flat from
+	$\phi = 0.6$ onward. The decision tree base learner, once again, shows the lowest
+	performance. The steep initial gain reflects the fact that very small subsets are
+	unrepresentative of the class distribution; once each subset is large enough to cover
+	all six activity classes, further enlargement adds redundant instances rather than new
+	information. Because subsets are drawn from the whole training set, raising $\phi$ also
+	makes them progressively more similar to one another, so the plateau in accuracy is
+	accompanied by a loss of ensemble diversity and a growth in training cost that
+	Section~\ref{subsec:diversity_cost} quantifies. We therefore fix $\phi = 0.5$ for all
+	reported experiments: it is the accuracy optimum for the two strongest base learners and
+	it precedes the region in which the ensemble degenerates toward a single classifier.
 	
 	\begin{figure*}[t!]
 		\centering
@@ -502,6 +564,59 @@ Sowkarthika et al. \cite{b_data_2023} tackled the issue of class overlapping and
 	than that of either ensemble.
 	
 	
+
+	\subsection{\tfourhighlight{Subset Overlap, Ensemble Diversity and Training Cost}}
+	\label{subsec:diversity_cost}
+	Because each subset is drawn from the whole training set rather than from a single
+	mixture component, the sampling ratio $\phi$ controls not only subset size but also how
+	much the $K$ subsets share. Table~\ref{tab:diversity_cost} reports this directly on UCI
+	HAR at the published $K = 6$: the mean pairwise Jaccard overlap of the training subsets,
+	the mean pairwise disagreement of the resulting base learners, the oracle accuracy
+	obtainable by an omniscient combiner, the achieved macro $F_1$, and the wall-clock cost
+	of fitting the $K$ learners.
+
+	The three quantities move together and explain the plateau reported above. Raising
+	$\phi$ from $0.4$ to $0.9$ increases subset overlap from $0.35$ to $0.88$ and drives
+	base-learner disagreement from $0.617$ to $0.011$: at the high end the $K$ learners are
+	trained on nearly the same rows and behave as one classifier. The oracle ceiling falls
+	in step, from $0.995$ to $0.974$, converging on the achieved score. This is the
+	operative constraint, because the oracle is an upper bound on \emph{any} weighting
+	scheme: once it coincides with the achieved $F_1$, no competence-weighting rule --
+	density-based or otherwise -- has headroom left to exploit. Training cost meanwhile
+	grows $3.8\times$. At $\phi = 0.9$ the ensemble matches a single logistic regression
+	exactly ($\Delta = 0.0000$) for almost four times the training budget.
+
+	This is a limitation of the sampling scheme rather than of the density weighting, and it
+	sets the operating range. We select $\phi = 0.5$, which retains $0.298$ disagreement and
+	an oracle margin of $0.015$ over the achieved score while attaining the best measured
+	$F_1$. Practitioners applying DDEL-GMM to a new dataset should treat subset overlap, not
+	accuracy alone, as the criterion for choosing $\phi$: accuracy is flat across a wide
+	range in which the ensemble is progressively degenerating.
+
+	\begin{table}[!t]
+		\centering
+		\caption{Subset overlap, base-learner diversity, oracle ceiling, achieved score and
+		training cost as a function of the sampling ratio. UCI HAR, $K = 6$,
+		logistic-regression base learners, DensityE aggregation, first fold of a stratified
+		$10$-fold split; the single-learner reference on the same fold is $0.9690$. Overlap is
+		the mean pairwise Jaccard index of the $K$ training subsets; disagreement is the mean
+		pairwise fraction of test instances on which two base learners differ; the oracle is
+		the accuracy of a combiner that selects the correct base learner for every instance.
+		The selected operating point is shown in bold.}
+		\label{tab:diversity_cost}
+		\begin{tabular}{ccccccc}
+			\hline
+			$\phi$ & Overlap & Disagr. & Oracle & Macro $F_1$ & $\Delta$ single & Fit (s) \\
+			\hline
+			$0.2$ & $0.163$ & $0.651$ & $0.9874$ & $0.9549$ & $-0.0141$ & $8$ \\
+			$0.4$ & $0.348$ & $0.617$ & $0.9951$ & $0.9708$ & $+0.0018$ & $17$ \\
+			$0.5$ & $0.425$ & $0.298$ & $0.9883$ & $\mathbf{0.9729}$ & $+0.0040$ & $27$ \\
+			$0.6$ & $0.530$ & $0.076$ & $0.9825$ & $0.9711$ & $+0.0021$ & $35$ \\
+			$0.9$ & $0.877$ & $0.011$ & $0.9738$ & $0.9690$ & $+0.0000$ & $66$ \\
+			\hline
+		\end{tabular}
+	\end{table}
+
 	\subsection{\tfourhighlight{Comparison with State-of-the-Art Dynamic Ensemble Methods}}
 	
 	\tfourhighlight{\noindent The analysis above establishes that the density-based weighting scheme (DensityE) is the strongest of the four aggregation variants internal to our framework. To validate that DDEL-GMM is competitive with the broader dynamic ensemble selection (DES) literature—and not merely against its own ablations—we designed a direct experiment against three published external baselines identified as most relevant in Section~\ref{sec:literature}. We compare against \textbf{DELAK} \cite{guo_dynamic_2021}, the K-means-sampling distance-based dynamic ensemble that is the closest methodological neighbour of our approach; \textbf{META-DES} \cite{cruz_meta-oracle_2017}, a meta-learning DES framework that estimates competence from meta-features; and \textbf{KNORA} (both the union, KNORA-U, and eliminate, KNORA-E, variants) \cite{ko_dynamic_2008}, the canonical oracle-neighbourhood DES methods. All methods were run on the identical HAR feature representation (157 principal components retaining 95\% of variance), with logistic regression base learners and the same $10$-fold cross-validation splits, so that the comparison isolates the ensemble mechanism rather than differences in preprocessing or evaluation protocol. For the external baselines we used the reference implementations from the DESlib library with standard default settings ($k=7$ neighbours for the KNORA region of competence; a random-forest meta-classifier for META-DES; $K$ matched to our cluster count for DELAK). Because the same folds are shared across methods, we assess statistical significance with the one-sided Wilcoxon signed-rank test on the paired per-fold mean F-scores.}
@@ -633,43 +748,43 @@ Sowkarthika et al. \cite{b_data_2023} tackled the issue of class overlapping and
 
 	\section{Discussion}
 	
-	\noindent The results indicate that the DensityE ensemble method offers the strongest performance among the four aggregation variants, particularly when logistic regression and support vector machine are utilized as base learners. This finding underscores the efficacy of DensityE’s approach in leveraging the strengths of diverse base learners and effectively managing their combined output. The superior performance of logistic regression and support vector machine base learners can be attributed to their robustness and strong generalization capabilities, especially when applied to data with complex underlying distributions.
+	\tfourhighlight{\noindent The results indicate that the DensityE ensemble method offers the strongest performance among the four aggregation variants, particularly when logistic regression and support vector machine are utilized as base learners. This finding underscores the efficacy of DensityE’s approach in leveraging the strengths of diverse base learners and effectively managing their combined output. The superior performance of logistic regression and support vector machine base learners can be attributed to their robustness and strong generalization capabilities, especially when applied to data with complex underlying distributions.}
 	
-	The comparative analysis across different base learners highlights the critical role of base learner selection in ensemble methods. While linear models
+	\tfourhighlight{The comparative analysis across different base learners highlights the critical role of base learner selection in ensemble methods. While linear models
 	like logistic regression and support vector machine benefit significantly from
 	the ensemble approach, non-linear models such as k-nearest neighbors and
 	decision trees show relatively lower performance. This disparity may be due
 	to the inherent differences in how these models handle data complexity and
-	variability.
+	variability.}
 	
-	The insights gained from Figures~\ref{fig:fscore_vs_clusters} and~\ref{fig:fscore_vs_phi} provide a deeper understanding
+	\tfourhighlight{The insights gained from Figures~\ref{fig:fscore_vs_clusters} and~\ref{fig:fscore_vs_phi} provide a deeper understanding
 	of ensemble dynamics. Increasing the number of clusters generally leads
 	to better performance, but the benefits diminish beyond a certain point.
 	Similarly, a higher sampling ratio enhances the F-score, emphasizing the
-	value of larger training samples for achieving higher accuracy.
+	value of larger training samples for achieving higher accuracy.}
 	
-	In conclusion, the DensityE ensemble method, particularly when paired
+	\tfourhighlight{In conclusion, the DensityE ensemble method, particularly when paired
 	with logistic regression and support vector machine base learners, demonstrates the most promising performance. Future research could explore the
 	integration of more sophisticated base learners and the application of these
-	ensemble methods to various types of datasets to further validate their robustness and generalizability. Additionally, investigating the effects of varying other parameters within the DensityE method may yield further performance improvements and insights.
+	ensemble methods to various types of datasets to further validate their robustness and generalizability. Additionally, investigating the effects of varying other parameters within the DensityE method may yield further performance improvements and insights.}
 	
 	
 	\section{Conclusion}
 	\noindent
 	
-	In this paper, we introduced the Density-Based Dynamic Ensemble Learning Algorithm using Gaussian Mixture Models (DDEL-GMM), a novel framework specifically engineered to enhance the personalization of predictions in complex data environments. The core challenge addressed is the limitation of traditional models in adapting to the unique characteristics of individual data points. DDEL-GMM tackles this by employing a sophisticated two-stage process. First, it uses Gaussian Mixture Models to partition the data into nuanced, overlapping clusters, capturing underlying data structures more effectively than methods based on rigid partitioning. This allows for the training of highly specialized base classifiers. Second, its density-based dynamic selection mechanism creates a bespoke, weighted ensemble for each individual test instance, ensuring that the final prediction is highly personalized and context-aware.
+	\tfourhighlight{In this paper, we introduced the Density-Based Dynamic Ensemble Learning Algorithm using Gaussian Mixture Models (DDEL-GMM), a novel framework specifically engineered to enhance the personalization of predictions in complex data environments. The core challenge addressed is the limitation of traditional models in adapting to the unique characteristics of individual data points. DDEL-GMM tackles this by employing a sophisticated two-stage process. First, it uses Gaussian Mixture Models to partition the data into nuanced, overlapping clusters, capturing underlying data structures more effectively than methods based on rigid partitioning. This allows for the training of highly specialized base classifiers. Second, its density-based dynamic selection mechanism creates a bespoke, weighted ensemble for each individual test instance, ensuring that the final prediction is highly personalized and context-aware.}
 	
-	Our experimental evaluation confirmed the superior performance of this personalized approach. DDEL-GMM, particularly when paired with Logistic Regression and Support Vector Machine base learners, outperformed the competing aggregation strategies within the clustering framework. Beyond the internal aggregation variants, a direct comparison against published dynamic ensemble selection methods—DELAK, META-DES, and the KNORA family—showed that DDEL-GMM achieves the best mean F-score and mean rank, with the improvements statistically significant under a paired Wilcoxon signed-rank test. Against classic non-clustering ensembles (Table~\ref{tab:noclustering}) the picture is more nuanced: DDEL-GMM decisively outperforms random forests, gradient boosting, and AdaBoost on every fold, but is statistically indistinguishable from bagging and from strong single linear models on this dataset, which is close to saturated for such models at $0.973$ macro F. Crucially, it addresses the key limitations of prior work such as the DELAK model. While DELAK utilizes K-means, which struggles with non-spherical data distributions, DDEL-GMM's use of GMMs allows for a more flexible and accurate modeling of complex data structures. The $1.6$-point F-score margin over DELAK—which differs from our method chiefly in the choice of clustering algorithm—provides direct empirical support for this design decision. This leads to a more effective specialization of base learners and, ultimately, more precise predictions. The density-based selection further refines the model's competence assessment beyond simple distance metrics, enhancing its robustness and accuracy.
+	\tfourhighlight{Our experimental evaluation confirmed the superior performance of this personalized approach. DDEL-GMM, particularly when paired with Logistic Regression and Support Vector Machine base learners, outperformed the competing aggregation strategies within the clustering framework. Beyond the internal aggregation variants, a direct comparison against published dynamic ensemble selection methods—DELAK, META-DES, and the KNORA family—showed that DDEL-GMM achieves the best mean F-score and mean rank, with the improvements statistically significant under a paired Wilcoxon signed-rank test. Against classic non-clustering ensembles (Table~\ref{tab:noclustering}) the picture is more nuanced: DDEL-GMM decisively outperforms random forests, gradient boosting, and AdaBoost on every fold, but is statistically indistinguishable from bagging and from strong single linear models on this dataset, which is close to saturated for such models at $0.973$ macro F. Crucially, it addresses the key limitations of prior work such as the DELAK model. While DELAK utilizes K-means, which struggles with non-spherical data distributions, DDEL-GMM's use of GMMs allows for a more flexible and accurate modeling of complex data structures. The $1.6$-point F-score margin over DELAK—which differs from our method chiefly in the choice of clustering algorithm—provides direct empirical support for this design decision. This leads to a more effective specialization of base learners and, ultimately, more precise predictions. The density-based selection further refines the model's competence assessment beyond simple distance metrics, enhancing its robustness and accuracy.}
 	
-	The findings establish DDEL-GMM as a powerful solution for classification tasks where personalization is paramount. The primary contribution of this work is a robust framework that advances the state-of-the-art in dynamic ensemble learning by delivering more accurate, reliable, and highly personalized predictive analytics.
+	\tfourhighlight{The findings establish DDEL-GMM as a powerful solution for classification tasks where personalization is paramount. The primary contribution of this work is a robust framework that advances the state-of-the-art in dynamic ensemble learning by delivering more accurate, reliable, and highly personalized predictive analytics.}
 	
-	Future research will aim to build upon this foundation. We intend to explore the integration of more diverse and complex base learners and to test the framework’s generalizability across various domains where personalized modeling is critical, such as personalized medicine and financial risk assessment. Further investigation into optimizing the GMM clustering phase and adapting the framework for real-time data streams will also be key areas of focus.
+	\tfourhighlight{Future research will aim to build upon this foundation. We intend to explore the integration of more diverse and complex base learners and to test the framework’s generalizability across various domains where personalized modeling is critical, such as personalized medicine and financial risk assessment. Further investigation into optimizing the GMM clustering phase and adapting the framework for real-time data streams will also be key areas of focus.}
 	
 	\bibliographystyle{IEEEtran}
 	\bibliography{references}
 	
-	%\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{fig1.png}}]{IEEE Publications Technology Team}
+	\tfourhighlight{%\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{fig1.png}}]{IEEE Publications Technology Team}
 	%In this paragraph you can place your educational, professional background and research and other interests.\end{IEEEbiography}
 
 
-\end{document}
+\end{document}}

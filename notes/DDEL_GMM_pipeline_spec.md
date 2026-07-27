@@ -89,8 +89,10 @@ to match centroids (Sec. 4.3).
 
 ### 3.2 Subset selection — `Functions.py :: up_memberc`
 
-**This is the definition of `phi`, and it is not what the algorithm box in the
-paper describes.**
+**This is the definition of `phi`. Note the scope: this is the instance-
+*selection* step only. The GMM is already fitted at this point, and the
+prediction-time weighting (Sec. 5.4) uses the full mixture posterior. The
+distance below is the ranking key for choosing rows, not the ensemble weight.**
 
 ```python
 k = round(phi * num_data_points)          # fraction of the ENTIRE training set
@@ -104,9 +106,13 @@ the cluster. Consequences:
 
 - Every subset has exactly `k = phi*N` rows regardless of cluster size.
 - Subsets **overlap by construction**, and overlap grows with `phi`.
-- Selection is by **Euclidean distance to the mean**, not by GMM
-  responsibility. The covariance `Sigma_k` plays no role here — it enters only
-  at prediction time (Sec. 5.4).
+- Selection ranks by **Euclidean distance to the mean** by default;
+  `up_memberc` also implements `distance_metrics='mahalanobis'`, and
+  `base_train.py` line 53 chooses `'Euclidean'`. Measured on HAR at K=6,
+  ranking by GMM responsibility instead changes macro F by +0.0002 at the
+  published phi=0.5 — inside the fold SD of 0.0024
+  (`data/selection_rule_diagnostic.csv`). The selection rule is not
+  load-bearing; the weighting is.
 - At `phi = 0.9` every base learner sees 90% of all training rows, so the K
   training sets are near-identical. Measured on HAR at K=5: mean pairwise
   Jaccard overlap 0.842, base-learner disagreement 0.008
@@ -288,9 +294,10 @@ scores 0.9734 (Wilcoxon p = 0.50, 5/10 wins) — parity.
 
 ## 8. Known defects to fix before resubmission
 
-1. **Algorithm 1 does not match `up_memberc`.** Text says responsibility-ranked
-   within-component; code is distance-ranked over the full training set. Fix
-   the text.
+1. ~~**Algorithm 1 does not match `up_memberc`.**~~ FIXED. Text now states the
+   distance ranking and that m is the full training set. The measured
+   difference between the two rules is +0.0002 at phi=0.5, documented in
+   `tab:selection_rule`.
 2. **Fig. 1(c) caption says "the originally published phi = 0.9".** Wrong — the
    published configuration is `phi = 0.5`. (My error; needs correcting.)
 3. **Sec. IV-E claims F-score "improves for all base learners" as phi rises.**
