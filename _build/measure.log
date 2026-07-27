@@ -1,0 +1,5 @@
+X=(10299, 562) classes=6
+variance retained=0.9505
+fold 1/10 DDEL-GMM=0.9723 Random=0.9283 Gradient=0.9610 Bagging=0.9711 AdaBoost=0.6250 Single=0.9690
+fold 2/10 DDEL-GMM=0.9702 Random=0.9422 Gradient=0.9606 Bagging=0.9702 AdaBoost=0.3812 Single=0.9690
+fold 3/10 DDEL-GMM=0.9739 Random=0.9278 Gradient=0.9529 Bagging=0.9767 AdaBoost=0.4330 Single=0.9749

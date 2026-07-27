@@ -1057,12 +1057,12 @@ LaTeX Font Warning: Font shape `TU/ptm/b/n' undefined
 (Font)              using `TU/ptm/bx/n' instead on input line 529.
 
 [12]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+
 
 LaTeX Font Warning: Font shape `TU/ptm/b/n' undefined
 (Font)              using `TU/ptm/bx/n' instead on input line 531.
-
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
@@ -1082,77 +1082,97 @@ LaTeX Font Warning: Font shape `TU/ptm/b/n' undefined
 
 
 LaTeX Font Warning: Font shape `TU/ptm/b/n' undefined
-(Font)              using `TU/ptm/bx/n' instead on input line 546.
+(Font)              using `TU/ptm/bx/n' instead on input line 539.
 
 
 LaTeX Font Warning: Font shape `TU/ptm/b/n' undefined
-(Font)              using `TU/ptm/bx/n' instead on input line 546.
+(Font)              using `TU/ptm/bx/n' instead on input line 541.
+
+[14]
+
+LaTeX Font Warning: Font shape `TU/ptm/b/n' undefined
+(Font)              using `TU/ptm/bx/n' instead on input line 550.
 
 
 LaTeX Font Warning: Font shape `TU/ptm/b/n' undefined
-(Font)              using `TU/ptm/bx/n' instead on input line 546.
+(Font)              using `TU/ptm/bx/n' instead on input line 550.
 
 
 LaTeX Font Warning: Font shape `TU/ptm/b/n' undefined
-(Font)              using `TU/ptm/bx/n' instead on input line 546.
+(Font)              using `TU/ptm/bx/n' instead on input line 550.
 
 
 LaTeX Font Warning: Font shape `TU/ptm/b/n' undefined
-(Font)              using `TU/ptm/bx/n' instead on input line 546.
+(Font)              using `TU/ptm/bx/n' instead on input line 550.
 
 
 LaTeX Font Warning: Font shape `TU/ptm/b/n' undefined
-(Font)              using `TU/ptm/bx/n' instead on input line 546.
+(Font)              using `TU/ptm/bx/n' instead on input line 550.
 
 
 LaTeX Font Warning: Font shape `TU/ptm/b/n' undefined
-(Font)              using `TU/ptm/bx/n' instead on input line 546.
+(Font)              using `TU/ptm/bx/n' instead on input line 550.
 
 
 LaTeX Font Warning: Font shape `TU/ptm/b/n' undefined
-(Font)              using `TU/ptm/bx/n' instead on input line 548.
+(Font)              using `TU/ptm/bx/n' instead on input line 550.
 
 
 LaTeX Font Warning: Font shape `TU/ptm/b/n' undefined
-(Font)              using `TU/ptm/bx/n' instead on input line 548.
+(Font)              using `TU/ptm/bx/n' instead on input line 550.
 
 
 LaTeX Font Warning: Font shape `TU/ptm/b/n' undefined
-(Font)              using `TU/ptm/bx/n' instead on input line 548.
+(Font)              using `TU/ptm/bx/n' instead on input line 552.
 
 
 LaTeX Font Warning: Font shape `TU/ptm/b/n' undefined
-(Font)              using `TU/ptm/bx/n' instead on input line 548.
+(Font)              using `TU/ptm/bx/n' instead on input line 552.
 
 
 LaTeX Font Warning: Font shape `TU/ptm/b/n' undefined
-(Font)              using `TU/ptm/bx/n' instead on input line 548.
+(Font)              using `TU/ptm/bx/n' instead on input line 552.
 
 
 LaTeX Font Warning: Font shape `TU/ptm/b/n' undefined
-(Font)              using `TU/ptm/bx/n' instead on input line 558.
+(Font)              using `TU/ptm/bx/n' instead on input line 552.
 
 
-Overfull \hbox (17.17612pt too wide) in paragraph at lines 544--561
+LaTeX Font Warning: Font shape `TU/ptm/b/n' undefined
+(Font)              using `TU/ptm/bx/n' instead on input line 554.
+
+
+LaTeX Font Warning: Font shape `TU/ptm/b/n' undefined
+(Font)              using `TU/ptm/bx/n' instead on input line 554.
+
+
+LaTeX Font Warning: Font shape `TU/ptm/b/n' undefined
+(Font)              using `TU/ptm/bx/n' instead on input line 556.
+
+
+Overfull \hbox (53.09612pt too wide) in paragraph at lines 548--567
  [] 
  []
 
 File: noclustering_comparison.pdf Graphic file (type pdf)
 <use noclustering_comparison.pdf>
-[14] (document.bbl
+[15] (document.bbl
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+
 ** WARNING: IEEEtran.bst: No hyphenation pattern has been
 ** loaded for the language `en'. Using the pattern for
 ** the default language instead.
 ** WARNING: IEEEtran.bst: No hyphenation pattern has been
 ** loaded for the language `en'. Using the pattern for
 ** the default language instead.
-[15]
 ** WARNING: IEEEtran.bst: No hyphenation pattern has been
 ** loaded for the language `eng'. Using the pattern for
 ** the default language instead.
 ** WARNING: IEEEtran.bst: No hyphenation pattern has been
 ** loaded for the language `eng'. Using the pattern for
 ** the default language instead.
+[16]
 ** WARNING: IEEEtran.bst: No hyphenation pattern has been
 ** loaded for the language `en'. Using the pattern for
 ** the default language instead.
@@ -1168,7 +1188,7 @@ x-text;!
 ** WARNING: IEEEtran.bst: No hyphenation pattern has been
 ** loaded for the language `en'. Using the pattern for
 ** the default language instead.
-[16]) [17
+[17]) [18
 
 ] (document.aux)
 
@@ -1177,4 +1197,4 @@ LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 Package rerunfilecheck Info: File `document.out' has not changed.
 (rerunfilecheck)             Checksum: C156D270A96B216D281C249F34A8DA4D;4438.
  )
-Output written on document.xdv (17 pages, 877152 bytes).
+Output written on document.xdv (18 pages, 926288 bytes).

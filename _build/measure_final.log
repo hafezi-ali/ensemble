@@ -1,0 +1,41 @@
+X=(10299, 562) classes=6
+variance retained=0.9505
+/root/.claude-science/conda/envs/python/lib/python3.11/site-packages/sklearn/svm/_base.py:239: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+fold 1/10 DDEL-GMM=0.9723 Random=0.9283 Gradient=0.9610 Bagging=0.9711 AdaBoost=0.8868 Single=0.9690 Single=0.9671
+/root/.claude-science/conda/envs/python/lib/python3.11/site-packages/sklearn/svm/_base.py:239: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+fold 2/10 DDEL-GMM=0.9702 Random=0.9422 Gradient=0.9606 Bagging=0.9702 AdaBoost=0.8999 Single=0.9690 Single=0.9706
+/root/.claude-science/conda/envs/python/lib/python3.11/site-packages/sklearn/svm/_base.py:239: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+fold 3/10 DDEL-GMM=0.9739 Random=0.9278 Gradient=0.9529 Bagging=0.9767 AdaBoost=0.8753 Single=0.9749 Single=0.9759
+/root/.claude-science/conda/envs/python/lib/python3.11/site-packages/sklearn/svm/_base.py:239: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+fold 4/10 DDEL-GMM=0.9720 Random=0.9237 Gradient=0.9615 Bagging=0.9699 AdaBoost=0.8749 Single=0.9729 Single=0.9687
+/root/.claude-science/conda/envs/python/lib/python3.11/site-packages/sklearn/svm/_base.py:239: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+fold 5/10 DDEL-GMM=0.9681 Random=0.9267 Gradient=0.9549 Bagging=0.9660 AdaBoost=0.8791 Single=0.9681 Single=0.9698
+/root/.claude-science/conda/envs/python/lib/python3.11/site-packages/sklearn/svm/_base.py:239: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+fold 6/10 DDEL-GMM=0.9840 Random=0.9405 Gradient=0.9657 Bagging=0.9823 AdaBoost=0.8871 Single=0.9829 Single=0.9823
+/root/.claude-science/conda/envs/python/lib/python3.11/site-packages/sklearn/svm/_base.py:239: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+fold 7/10 DDEL-GMM=0.9818 Random=0.9392 Gradient=0.9677 Bagging=0.9783 AdaBoost=0.8944 Single=0.9818 Single=0.9822
+/root/.claude-science/conda/envs/python/lib/python3.11/site-packages/sklearn/svm/_base.py:239: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+fold 8/10 DDEL-GMM=0.9697 Random=0.9337 Gradient=0.9527 Bagging=0.9720 AdaBoost=0.8844 Single=0.9707 Single=0.9652
+/root/.claude-science/conda/envs/python/lib/python3.11/site-packages/sklearn/svm/_base.py:239: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+fold 9/10 DDEL-GMM=0.9674 Random=0.9174 Gradient=0.9379 Bagging=0.9705 AdaBoost=0.8522 Single=0.9685 Single=0.9634
+/root/.claude-science/conda/envs/python/lib/python3.11/site-packages/sklearn/svm/_base.py:239: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+fold 10/10 DDEL-GMM=0.9748 Random=0.9342 Gradient=0.9612 Bagging=0.9769 AdaBoost=0.8815 Single=0.9757 Single=0.9757
+
+           Method      Acc        F     F_sd      AUC  MeanRank    Train_s
+  DDEL-GMM (ours) 0.972522 0.973410 0.005537 0.998668      2.65 103.184176
+    Random Forest 0.932615 0.931381 0.007973 0.995082      6.00  63.288150
+Gradient Boosting 0.957278 0.957603 0.008548 0.998072      5.00 127.944251
+     Bagging (LR) 0.972425 0.973381 0.004920 0.998761      2.20 138.224528
+         AdaBoost 0.879600 0.881584 0.012994 0.980368      7.00 173.340176
+        Single LR 0.972522 0.973353 0.005450 0.998667      2.35  13.888286
+       Single SVM 0.971260 0.972071 0.006659 0.998724      2.80  30.928666

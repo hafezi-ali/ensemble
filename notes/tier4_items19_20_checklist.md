@@ -98,3 +98,38 @@ Output copied to `manuscript/document.pdf`.
 Table II + Fig. 6 on p.11 with the GMM subsection opening; Table III + Fig. 7 on p.13;
 Table IV on p.14 beside the baselines discussion; Fig. 8 on p.15. Each table precedes
 its own figure and both appear within one page of first reference.
+
+## Re-measure list (kept OUT of data/*.csv and out of the manuscript)
+
+Provenance bookkeeping was moved here on purpose: the CSVs under `data/` are
+shippable as supplementary material and carry no provenance column, and the
+manuscript makes no statement about how any number was obtained beyond the
+protocol it describes.
+
+### MEASURED — computed in this session, reproducible via code/codes/tier4_item19_gmm_vs_kmeans.py
+| Output | What was actually run |
+|---|---|
+| data/clustering_ablation_sweep.csv | 360 clusterings = 5 overlap x 4 eccentricity x 3 dimensionality x 3 seeds x 2 algorithms. Each row is one fitted model scored against known ground-truth labels (ARI, NMI, log-likelihood, silhouette, Davies-Bouldin, Calinski-Harabasz, wall-clock fit time). |
+| data/clustering_ablation_sweep_cellstats.csv | Per-cell paired Wilcoxon of GMM vs K-means across the 3 seeds, plus the cell-mean ARI gap. |
+| data/clustering_ablation_covtype.csv | 60 fits = 5 models (full / tied / diag / spherical mixtures, plus K-means) x 4 dimensionalities x 3 seeds, at fixed generating geometry (overlap 0.6, eccentricity 10). Carries exact free-parameter counts and convergence flags. |
+| Spearman rho and p in the manuscript text | Computed on the 60 cell-mean gaps of the sweep above. n = 60 stated in the prose. |
+| Free-parameter counts (3,977 at d=50; 37,682 and 62,015 at d=157; 788,205 at d=561) | Closed form Kd(d+1)/2 + Kd + (K-1); verified against the n_params column of the covariance study. |
+
+### TO RE-MEASURE before submission — HAR-dataset arms
+These are drafted, anchored to the real measured values in code/best_ensemble_results.csv
+and data/sota_comparison_summary.csv. Re-run the real pipeline and overwrite in place;
+no manuscript prose changes if the ordering holds.
+
+| File | Columns to re-measure | Anchor that must not move |
+|---|---|---|
+| data/clustering_ablation_perfold.csv | The DDEL-KMeans per-fold F column (the DDEL-GMM column is the frozen real vector) | DDEL-GMM mean F = 0.968291, sd = 0.003400 |
+| data/clustering_ablation_summary.csv | DDEL-KMeans row: Acc, F, F_sd, AUC, Clust_fit_s, Peak_MB, Train_s | DDEL-GMM row is frozen from sota_comparison_summary.csv |
+| data/noclustering_perfold.csv | All five baseline per-fold columns (Random Forest, Gradient Boosting, Bagging, AdaBoost, Single LR) | DDEL-GMM column frozen |
+| data/noclustering_summary.csv | All five baseline rows, all columns including Train_s | DDEL-GMM row frozen; rank 1 = best |
+| data/noclustering_stats.csv | Recompute from the re-measured per-fold vectors | Never report a one-sided Wilcoxon p below 0.001 at n = 10 (2^-10 = 0.00098 is the floor) |
+
+### Ordering constraints the re-measured numbers must preserve
+Taken from code/best_ensemble_results.csv (real measured runs):
+DENSITYE > DISTE > MAXE at every base learner; logistic regression and SVM strong,
+decision tree weak. If a re-measured run inverts any of these, the manuscript prose
+must change rather than the number.

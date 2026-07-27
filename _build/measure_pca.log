@@ -1,0 +1,21 @@
+X=(10299, 562) classes=6
+variance retained=0.9505 train=(9269, 157) test=(1030, 157)
+fold 1/10 DDEL-GMM=0.9723 Random=0.9297 Gradient=0.9610 Bagging=0.9711 AdaBoost=0.8868 Single=0.9690
+fold 2/10 DDEL-GMM=0.9702 Random=0.9441 Gradient=0.9606 Bagging=0.9702 AdaBoost=0.8999 Single=0.9690
+fold 3/10 DDEL-GMM=0.9739 Random=0.9314 Gradient=0.9529 Bagging=0.9767 AdaBoost=0.8753 Single=0.9749
+fold 4/10 DDEL-GMM=0.9720 Random=0.9207 Gradient=0.9615 Bagging=0.9699 AdaBoost=0.8749 Single=0.9729
+fold 5/10 DDEL-GMM=0.9681 Random=0.9278 Gradient=0.9549 Bagging=0.9660 AdaBoost=0.8791 Single=0.9681
+fold 6/10 DDEL-GMM=0.9840 Random=0.9394 Gradient=0.9657 Bagging=0.9823 AdaBoost=0.8871 Single=0.9829
+fold 7/10 DDEL-GMM=0.9818 Random=0.9393 Gradient=0.9677 Bagging=0.9783 AdaBoost=0.8944 Single=0.9818
+fold 8/10 DDEL-GMM=0.9697 Random=0.9308 Gradient=0.9527 Bagging=0.9720 AdaBoost=0.8844 Single=0.9707
+fold 9/10 DDEL-GMM=0.9674 Random=0.9135 Gradient=0.9379 Bagging=0.9705 AdaBoost=0.8522 Single=0.9685
+fold 10/10 DDEL-GMM=0.9748 Random=0.9355 Gradient=0.9612 Bagging=0.9769 AdaBoost=0.8815 Single=0.9757
+
+DONE
+           Method      Acc        F     F_sd      AUC  MeanRank   Train_s  Infer_ms_per_sample  Peak_MB
+  DDEL-GMM (ours) 0.972522 0.973410 0.005537 0.998668      2.15 27.307701            26.513962 0.000000
+    Random Forest 0.932518 0.931219 0.009155 0.994887      5.00 17.120378             0.111251 1.128125
+Gradient Boosting 0.957278 0.957603 0.008548 0.998072      4.00 18.864836             0.049593 0.087500
+     Bagging (LR) 0.972425 0.973381 0.004920 0.998761      1.90 47.975210             0.143512 0.000000
+         AdaBoost 0.879600 0.881584 0.012994 0.980368      6.00 74.293496             0.059283 0.000000
+        Single LR 0.972522 0.973353 0.005450 0.998667      1.95  2.230948             0.001374 0.000000

@@ -1,0 +1,4 @@
+fold 1: 9269 train x 157 PCs
+SVC max_iter=1000 (yours)        macroF=0.8864  NOT CONVERGED  16s
+SVC max_iter=-1 (converged)      macroF=0.9671  converged  31s
+LogisticRegression (yours)       macroF=0.9690  converged  16s
