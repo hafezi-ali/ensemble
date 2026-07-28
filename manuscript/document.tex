@@ -125,27 +125,23 @@ Sowkarthika et al. \cite{b_data_2023} tackled the issue of class overlapping and
 	
 	\noindent This paper proposes a novel dynamic ensemble model, the Density-Based Dynamic Ensemble Learning algorithm via Gaussian Mixture Model clustering (DDEL-GMM). \greenhighlight{DDEL-GMM is designed to enhance predictive accuracy in providing personalized predictions.} By employing Gaussian Mixture Models (GMM) for clustering and a density-based decision-making approach, \greenhighlight{the model aims to achieve} a more granular analysis of complex data distributions and \greenhighlight{provide} a robust framework for classifier competence estimation.
 	
-	Figure~\ref{fig:overview} summarises the method and the two empirical facts that govern its behaviour.
-	Panel~(a) traces the pipeline. Panel~(b) reports the outcome of the aggregation comparison developed
-	in Section~\ref{sec:results}: density weighting is the strongest of the rules considered here.
-	Panel~(c) records the mechanism behind that outcome and its limit---the density weighting can only
-	act on genuine disagreement between the base learners, and that disagreement is controlled by the
-	sampling ratio $\phi$.
+	Figure~\ref{fig:overview} traces the method in three stages. The empirical behaviour it
+	produces---which aggregation rule wins, why, and where the mechanism runs out---is reported
+	in Section~\ref{sec:results} and summarised in Figure~\ref{fig:diagnostics}.
 	
 	\begin{figure*}[!t]
 		\centering
-		\includegraphics[width=\linewidth]{fig1_overview}
-		\caption{Overview of DDEL-GMM. (a) Pipeline: a Gaussian mixture with full covariances $\Sigma_k$
-		partitions the $157$-dimensional principal-component representation of the HAR data; each
-		component resamples a fraction $\phi$ of the training rows to fit one base learner $f_k$; at
-		inference the mixture responsibilities of the query $x^{*}$ weight the learners' outputs.
-		(b) Mean F-score by base learner and aggregation rule (error bars $\pm 1$ SD across
-		cross-validation folds); DensityE leads for the lr, svm and knn learners, while the
-		maximum-responsibility rule MaxE, which retains a single learner per query, degrades sharply.
-		(c) Diversity diagnostic: as $\phi$ rises the resampled subsets overlap more and base-learner
-		disagreement falls below $1.5\%$ at the top of the swept range, $\phi = 0.9$, where the
-		subsets share $88\%$ of their instances and the ensemble is effectively a single
-		classifier; the selected operating point $\phi = 0.5$ retains $30\%$ disagreement.}
+		\includegraphics[width=\linewidth]{fig1_pipeline}
+		\caption{The DDEL-GMM pipeline. \textsc{Fit}: a Gaussian mixture with full covariance
+		matrices is estimated by EM over the $157$ retained principal components, yielding
+		$\mu_k$, $\Sigma_k$ and $\pi_k$ for $K=6$ components. \textsc{Select}: the training rows
+		are ranked by distance to each $\mu_k$ and the nearest $\phi m$ are retained, where $\phi$
+		is a fraction of the \emph{entire} training set rather than of a single cluster; the six
+		resulting subsets therefore overlap ($42\%$ pairwise at the cross-validated operating
+		point $\phi = 0.5$). \textsc{Weight}: at inference each base learner $f_k$ is weighted by
+		the mixture posterior $\gamma_k(x^*) \propto \pi_k\,\mathcal{N}(x^* \mid \mu_k, \Sigma_k)$,
+		so the weighting---unlike inverse-distance schemes---is anisotropic and carries the full
+		component covariance. Dataset: UCI HAR, $10{,}299$ instances.}
 		\label{fig:overview}
 	\end{figure*}
 	
@@ -381,6 +377,13 @@ Sowkarthika et al. \cite{b_data_2023} tackled the issue of class overlapping and
 	
 	\noindent The performance of various ensemble methods, with a base learner count $nc = 6$ and a regularization parameter $\phi = 0.5$, is systematically compared in Table \ref{tab:ensemble_comparison}. This table assesses four ensemble methods—DensityE (a density-based ensemble method), DistE (a distance-based ensemble method), AvgE (an average-based ensemble method), and MaxE (a maximum-based ensemble method)—using four distinct types of base learners: logistic regression (lr), support vector machine (svm), k-nearest neighbors (knn), and decision tree (dt).
 	
+	\begin{figure*}[t!]
+		\centering
+		\includegraphics[width=0.7\linewidth]{fscore_vs_phi}
+		\caption{F-score vs Sampling Ratio for Density ensemble method}
+		\label{fig:fscore_vs_phi}
+	\end{figure*}
+	
 	\subsection{Ensemble Method Performance Analysis}
 	
 	\noindent Table \ref{tab:ensemble_comparison} reveals that the DensityE ensemble method consistently achieves the highest mean scores across most base learners. Specifically, the logistic regression base learner combined with the DensityE method attains a mean score of 0.973, closely followed by the support vector machine base learner with a mean score of 0.969. The k-nearest neighbors base learner also performs well under the DensityE method, achieving a mean score of 0.958.
@@ -537,14 +540,30 @@ Sowkarthika et al. \cite{b_data_2023} tackled the issue of class overlapping and
 		\label{fig:fscore_vs_clusters}
 	\end{figure*}
 	
-	\begin{figure*}[t!]
+	\begin{figure*}[!t]
 		\centering
-		\includegraphics[width=0.7\linewidth]{fscore_vs_phi}
-		\caption{F-score vs Sampling Ratio for Density ensemble method}
-		\label{fig:fscore_vs_phi}
+		\includegraphics[width=\linewidth]{fig2_diagnostics}
+		\caption{Empirical behaviour of DDEL-GMM on UCI HAR at $K = 6$.
+		(a)~Mean macro F-score by base learner and aggregation rule at the cross-validated operating
+		point $\phi = 0.5$; error bars are $\pm 1$ standard deviation across folds. DensityE is
+		highest for logistic regression, SVM and KNN; DistE follows within one standard deviation;
+		MaxE, which commits to the single highest-responsibility learner per query, degrades sharply
+		and reaches $0.410$ under a decision-tree learner.
+		(b)~Subset overlap and base-learner disagreement as functions of the sampling ratio $\phi$.
+		Because $\phi$ is a fraction of the whole training set, raising it drives the six subsets
+		together: overlap climbs from $16\%$ to $88\%$ while disagreement falls from $65\%$ to
+		$1.1\%$. At $\phi = 0.9$ the ensemble is effectively a single classifier; the operating
+		point $\phi = 0.5$ retains $30\%$ disagreement.
+		(c)~Oracle ceiling---the score attainable by an omniscient per-query selector over the same
+		base learners---against the score DDEL-GMM achieves. The shaded band is the remaining
+		headroom. At $\phi = 0.5$ it is $1.54$ percentage points, so a better weighting rule still
+		has margin to exploit; by $\phi = 0.9$ it has closed to $0.48$~pp, which is the same
+		degeneration seen in~(b) measured on the accuracy axis rather than the diversity axis.
+		All values are read from the measured sweep; no value is interpolated.}
+		\label{fig:diagnostics}
 	\end{figure*}
 	
-	Figure \ref{fig:overview}(b) summarises these aggregation results visually. Across the three
+	Figure~\ref{fig:diagnostics}(a) summarises these aggregation results visually. Across the three
 	learners for which the framework is effective (lr, svm, knn), DensityE attains the highest mean
 	F-score and the smallest dispersion, DistE follows within one standard deviation, and MaxE degrades
 	sharply and erratically---its standard deviation reaches $0.143$ for the decision-tree learner
