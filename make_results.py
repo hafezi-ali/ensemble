@@ -37,8 +37,64 @@ def run(script, args=()):
     return subprocess.call(cmd, cwd=ROOT)
 
 
+# Index columns carry row labels, not measurements: a filled 'phi' column
+# does not mean anyone has pasted results in yet.
+INDEX_COLS = {"phi", "k", "drift_point", "fold", "method", "learner",
+              "base_learner", "variant", "clustering", "clustering_type",
+              "data_geometry", "dataset", "ensemble_method", "model",
+              "covariance_type", "cite_key", "algorithm"}
+
+
+def status():
+    """Print which results/*.csv still need numbers pasted in."""
+    import csv as _csv
+    import glob
+
+    def is_number(v):
+        v = str(v or "").strip()
+        if v == "---":
+            return True   # deliberate "not applicable", not a gap
+        try:
+            float(v)
+            return True
+        except ValueError:
+            return False
+
+    rows = []
+    for path in sorted(glob.glob(os.path.join(ROOT, "results", "*.csv"))):
+        with open(path, newline="", encoding="utf-8-sig") as fh:
+            data = list(_csv.DictReader(fh))
+        if not data:
+            continue
+        cols = [c for c in data[0] if c and c.lower() not in INDEX_COLS]
+        cells = [r.get(c) for r in data for c in cols]
+        filled = sum(1 for v in cells if is_number(v))
+        total = len(cells)
+        rows.append((os.path.basename(path), filled, total))
+
+    width = max(len(n) for n, _, _ in rows)
+    print("\n" + "=" * 70)
+    print("RESULTS STATUS - which files still need your numbers")
+    print("=" * 70)
+    for group, keep in (("NEEDS DATA", lambda f, t: f == 0),
+                        ("PARTIAL", lambda f, t: 0 < f < t),
+                        ("COMPLETE", lambda f, t: f == t and t > 0)):
+        sel = [r for r in rows if keep(r[1], r[2])]
+        if not sel:
+            continue
+        print("\n%s:" % group)
+        for name, filled, total in sel:
+            bar = "empty" if filled == 0 else "%d/%d values" % (filled, total)
+            print("  %-*s  %s" % (width, name, bar))
+    print("\nPaste numbers into the files above, then run: python3 make_results.py")
+    print("=" * 70)
+    return 0
+
+
 def main():
     argv = sys.argv[1:]
+    if "--status" in argv:
+        return status()
     verify = "--verify" in argv
     only_tables = "--tables" in argv
     only_figures = "--figures" in argv
