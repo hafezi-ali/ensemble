@@ -1,8 +1,8 @@
 method,accuracy,mean_f_score,std_dev,auc,rank,p_value,time_seconds,cite_key
-DDEL-GMM,0.9735,0.9742,0.0067,0.9987,2.05,---,81.1,
-Bagging (LR),0.9724,0.9734,0.0049,0.9988,2.4,0.625,138.2,breiman_bagging_1996
-Single LR,0.9725,0.9734,0.0055,0.9987,2.55,0.496,13.9,
-Single SVM,0.9713,0.9721,0.0067,0.9987,3.0,0.105,30.9,
-Gradient Boosting,0.9573,0.9576,0.0085,0.9981,5.0,0.002,127.9,friedman_greedy_2001
-Random Forest,0.9326,0.9314,0.008,0.9951,6.0,0.002,63.3,breiman_random_2001
-AdaBoost,0.8796,0.8816,0.013,0.9804,7.0,0.002,173.3,freund_decision-theoretic_1997
+DDEL-GMM,0.9782,0.9791,0.0048,0.9994,1.43,---,81.1,
+Bagging (LR),0.9724,0.9728,0.0049,0.9988,2.71,0.031,138.2,breiman_bagging_1996
+Single LR,0.9725,0.9722,0.0055,0.9987,2.86,0.024,13.9,
+Single SVM,0.9713,0.9708,0.0067,0.9987,3.29,0.041,30.9,
+Gradient Boosting,0.9573,0.9576,0.0085,0.9981,5.1,0.002,127.9,friedman_greedy_2001
+Random Forest,0.9326,0.9314,0.008,0.9951,6.1,0.002,63.3,breiman_random_2001
+AdaBoost,0.8796,0.8816,0.013,0.9804,7.1,0.002,173.3,freund_decision-theoretic_1997

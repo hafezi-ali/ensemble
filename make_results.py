@@ -9,7 +9,7 @@
 WORKFLOW
 --------
 1. Paste new numbers from Colab into the relevant file in results/ (one CSV per
-   table or figure; see RESULTS_WORKFLOW.md for which file drives what).
+   table or figure; see docs/2-CSV-TO-OUTPUT-MAP.md for which file drives what).
 2. Run this script.
 3. Recompile the manuscript. document.tex \\inputs tables/*.tex and reads the
    figures, so the PDF picks up the new numbers with no LaTeX edits.

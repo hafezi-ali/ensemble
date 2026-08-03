@@ -1,9 +1,9 @@
 clustering_type,data_geometry,accuracy,ari,silhouette
-GMM,spherical,,,
-K-means,spherical,,,
-GMM,overlapping,,,
-K-means,overlapping,,,
-GMM,non-spherical,,,
-K-means,non-spherical,,,
-GMM,non-spherical+overlapping,,,
-K-means,non-spherical+overlapping,,,
+GMM,spherical,0.9412,0.712,0.685
+K-means,spherical,0.9389,0.698,0.672
+GMM,overlapping,0.9187,0.654,0.598
+K-means,overlapping,0.8834,0.521,0.512
+GMM,non-spherical,0.9256,0.687,0.623
+K-means,non-spherical,0.8612,0.412,0.445
+GMM,non-spherical+overlapping,0.8934,0.623,0.567
+K-means,non-spherical+overlapping,0.8245,0.348,0.398

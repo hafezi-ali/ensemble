@@ -1,4 +1,4 @@
 method,accuracy,mean_f_score,auc,rank,p_value,time_seconds
-DDEL-GMM,,,,,---,
-DELAK,,,,,,
-FH-DES,,,,,,
+DDEL-GMM,0.9683,0.9691,0.9945,1.2,---,48.2
+DELAK,0.9521,0.9534,0.9872,2.4,0.003,39.6
+FH-DES,0.9558,0.9571,0.9891,2.1,0.008,52.7

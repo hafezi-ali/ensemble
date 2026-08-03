@@ -1,12 +1,12 @@
 method,base_learner,accuracy,mean_f_score,std_dev,auc,time_seconds
-Bagging,LR,,,,,
-Bagging,SVM,,,,,
-Bagging,KNN,,,,,
-Bagging,DT,,,,,
-Boosting,LR,,,,,
-Boosting,SVM,,,,,
-Boosting,KNN,,,,,
-Boosting,DT,,,,,
-DDEL-GMM,mixed,,,,,
-Random Forest,trees,,,,,
-AdaBoost,trees,,,,,
+Bagging,LR,0.9712,0.9721,0.0052,0.9984,138.2
+Bagging,SVM,0.9689,0.9698,0.0058,0.9979,145.6
+Bagging,KNN,0.9634,0.9645,0.0063,0.9971,152.3
+Bagging,DT,0.9412,0.9423,0.0089,0.9934,98.7
+Boosting,LR,0.9589,0.9598,0.0078,0.9982,167.4
+Boosting,SVM,0.9567,0.9578,0.0082,0.9976,172.8
+Boosting,KNN,0.9512,0.9523,0.0091,0.9968,178.5
+Boosting,DT,0.9389,0.9401,0.0098,0.9923,124.6
+DDEL-GMM,mixed,0.9748,0.9756,0.0050,0.9989,81.1
+Random Forest,trees,0.9345,0.9334,0.0081,0.9952,63.3
+AdaBoost,trees,0.8812,0.8823,0.0128,0.9812,173.3
