@@ -1,0 +1,10 @@
+# Per-fold F-scores for boxplot figure (figure_boxplot_comparison_v2)
+# Column order: method,learner,fold,fscore
+# Data source: Colab Main_Thp.ipynb cell 12, outer 10-fold cross-validation loop
+# When filled: renderer will compute true quartiles, median, whiskers, and FLIER CIRCLES from raw folds
+# When empty: renderer falls back to precomputed 5-number summaries (no fliers)
+# Status: EMPTY (awaiting per-fold F-scores from Colab)
+# NOTE: Caption promises outlier circles for folds beyond 1.5×IQR and claims DensityE "produces no
+#       low-side outlier folds". These claims cannot be verified from 5-number summaries alone.
+#       Paste this CSV with per-fold scores to restore the published figure with circles.
+method,learner,fold,fscore

@@ -1,0 +1,4 @@
+wrote boxplot_comparison_v2.{pdf,png}
+lr fold SD    DensityE 0.003 | DistE 0.043 | 14x tighter
+lr mean-median  DensityE -0.0003 | DistE -0.0093  (low outlier folds)
+lr IQR          DensityE 0.0040 | DistE 0.0022  <- NOT the dispersion claim

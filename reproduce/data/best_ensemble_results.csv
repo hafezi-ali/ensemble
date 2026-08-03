@@ -1,0 +1,13 @@
+,base_learner,ensemble_method,mean_score,std_score
+485,lr,densitye,0.973,0.003
+482,svm,densitye,0.969,0.003
+483,lr,diste,0.962,0.043
+480,svm,diste,0.959,0.04
+488,knn,densitye,0.958,0.004
+486,knn,diste,0.948,0.031
+481,svm,maxe,0.855,0.04
+489,dt,diste,0.841,0.016
+491,dt,densitye,0.821,0.01
+487,knn,maxe,0.722,0.122
+484,lr,maxe,0.508,0.034
+490,dt,maxe,0.41,0.143

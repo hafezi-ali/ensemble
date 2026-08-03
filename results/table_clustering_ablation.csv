@@ -1,0 +1,3 @@
+variant,clustering,accuracy,mean_f_score,auc,rank,covariance_params,ari
+DDEL-GMM,GMM,0.966,0.968,0.994,1.0,62015,0.728
+DDEL-KMeans,K-means,0.959,0.961,0.99,2.0,785,0.317

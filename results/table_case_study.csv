@@ -1,0 +1,6 @@
+method,dataset,accuracy,mean_f_score,sensitivity,specificity,auc,p_value,time_seconds
+DDEL-GMM,medical,,,,,,---,
+DELAK,medical,,,,,,,
+META-DES,medical,,,,,,,
+KNORA-U,medical,,,,,,,
+Single LR,medical,,,,,,,

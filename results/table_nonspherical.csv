@@ -1,0 +1,9 @@
+clustering_type,data_geometry,accuracy,ari,silhouette
+GMM,spherical,,,
+K-means,spherical,,,
+GMM,overlapping,,,
+K-means,overlapping,,,
+GMM,non-spherical,,,
+K-means,non-spherical,,,
+GMM,non-spherical+overlapping,,,
+K-means,non-spherical+overlapping,,,

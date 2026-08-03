@@ -1,0 +1,23 @@
+\begin{table}[!t]
+		\centering
+		\caption{Subset overlap, base-learner diversity, oracle ceiling, achieved score and
+		training cost as a function of the sampling ratio. UCI HAR, $K = 6$,
+		logistic-regression base learners, DensityE aggregation, first fold of a stratified
+		$10$-fold split; the single-learner reference on the same fold is $0.9690$. Overlap is
+		the mean pairwise Jaccard index of the $K$ training subsets; disagreement is the mean
+		pairwise fraction of test instances on which two base learners differ; the oracle is
+		the accuracy of a combiner that selects the correct base learner for every instance.
+		The selected operating point is shown in bold.}
+		\label{tab:diversity_cost}
+		\begin{tabular}{ccccccc}
+			\hline
+			$\phi$ & Overlap & Disagr. & Oracle & Macro $F_1$ & $\Delta$ single & Fit (s) \\
+			\hline
+			$0.2$ & $0.163$ & $0.651$ & $0.9874$ & $0.9549$ & $-0.0141$ & $8$ \\
+			$0.4$ & $0.348$ & $0.617$ & $0.9951$ & $0.9708$ & $+0.0018$ & $17$ \\
+			$0.5$ & $0.425$ & $0.298$ & $0.9883$ & $\mathbf{0.9729}$ & $+0.0040$ & $27$ \\
+			$0.6$ & $0.530$ & $0.076$ & $0.9825$ & $0.9711$ & $+0.0021$ & $35$ \\
+			$0.9$ & $0.877$ & $0.011$ & $0.9738$ & $0.9690$ & $+0.0000$ & $66$ \\
+			\hline
+		\end{tabular}
+	\end{table}

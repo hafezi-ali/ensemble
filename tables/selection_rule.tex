@@ -1,0 +1,24 @@
+\begin{table}[!t]
+		\centering
+		\caption{Instance-selection rule at partitioning time, UCI HAR, $K = 6$, logistic-regression
+		base learners, DensityE aggregation. \emph{Distance} ranks by Euclidean distance to $\mu_i$
+		(our implementation); \emph{responsibility} ranks by the component posterior
+		$\gamma_i(x_j)$, which uses $\Sigma_i$. Disagreement is the mean pairwise fraction of test
+		instances on which two base learners differ; overlap is the mean pairwise Jaccard index of
+		the training subsets. Ensemble weights are the GMM responsibilities in both columns. The
+		selected operating point is shown in bold.}
+		\label{tab:selection_rule}
+		\begin{tabular}{cccccc}
+			\hline
+			& \multicolumn{2}{c}{Macro $F_1$} & \multicolumn{2}{c}{Disagreement} & \\
+			\cline{2-3}\cline{4-5}
+			$\phi$ & distance & responsib. & distance & responsib. & Overlap \\
+			\hline
+			$0.2$ & $0.9549$ & $0.9497$ & $0.651$ & $0.656$ & $0.163$ \\
+			$0.4$ & $0.9708$ & $0.9800$ & $0.617$ & $0.521$ & $0.348$ \\
+			$0.5$ & $\mathbf{0.9729}$ & $0.9732$ & $0.298$ & $0.414$ & $0.425$ \\
+			$0.6$ & $0.9711$ & $0.9711$ & $0.076$ & $0.192$ & $0.530$ \\
+			$0.9$ & $0.9690$ & $0.9723$ & $0.011$ & $0.008$ & $0.877$ \\
+			\hline
+		\end{tabular}
+	\end{table}

@@ -1,0 +1,9 @@
+         method   mean     sd      p
+DDEL-GMM (ours) 0.9683 0.0034    NaN
+       META-DES 0.9593 0.0111 0.0186
+          DELAK 0.9522 0.0102 0.0020
+        KNORA-U 0.9479 0.0116 0.0010
+        KNORA-E 0.9460 0.0111 0.0010
+
+!! sota_perfold_fscores.csv is NOT measured -- see this script's docstring.
+!! The figure is rendered so the pipeline is ready; the numbers are not evidence.

@@ -1,0 +1,12 @@
+method,base_learner,accuracy,mean_f_score,std_dev,auc,time_seconds
+Bagging,LR,,,,,
+Bagging,SVM,,,,,
+Bagging,KNN,,,,,
+Bagging,DT,,,,,
+Boosting,LR,,,,,
+Boosting,SVM,,,,,
+Boosting,KNN,,,,,
+Boosting,DT,,,,,
+DDEL-GMM,mixed,,,,,
+Random Forest,trees,,,,,
+AdaBoost,trees,,,,,

@@ -1,0 +1,26 @@
+\begin{table}[htbp]
+			\begin{center}
+				\caption{Comparison of DDEL-GMM with classic non-clustering ensemble methods on the HAR dataset ($10$-fold stratified CV, $157$-PC representation, common fold seed). Best value in each column in bold; rank $1$ is best. $p$ is the paired two-sided Wilcoxon signed-rank test of DDEL-GMM against each baseline on per-fold F-scores ($n=10$; $p=0.002$ is the attainable minimum at this sample size). ``Wins'' counts folds on which DDEL-GMM scores higher. The Nemenyi critical difference at $\alpha=0.05$ is $2.85$ mean ranks; AdaBoost, random forests, and gradient boosting are separated from DDEL-GMM, the three remaining baselines are not. DDEL-GMM hyperparameters are chosen by nested cross-validation inside each training fold; its time column excludes the $268.5$\,s per-fold selection search. The support vector machine is trained to convergence and AdaBoost uses depth-$3$ base trees.}
+				\label{tab:noclustering}
+				\setlength{\tabcolsep}{2.5pt}
+				\begin{tabular}{|l|c|c|c|c|c|c|c|}
+					\hline
+					\textbf{Method} & \textbf{Acc.} & \textbf{Mean F} & \textbf{SD} & \textbf{AUC} & \textbf{Rank} & \textbf{$p$} & \textbf{Time (s)} \\
+					\hline
+					\textbf{DDEL-GMM (ours)} & \textbf{0.9735} & \textbf{0.9742} & 0.0067 & 0.9987 & \textbf{2.05} & --- & 81.1 \\
+					\hline
+					Bagging (LR) \cite{breiman_bagging_1996} & 0.9724 & 0.9734 & \textbf{0.0049} & \textbf{0.9988} & 2.40 & 0.625 & 138.2 \\
+					\hline
+					Single LR & 0.9725 & 0.9734 & 0.0055 & 0.9987 & 2.55 & 0.496 & \textbf{13.9} \\
+					\hline
+					Single SVM (converged) & 0.9713 & 0.9721 & 0.0067 & 0.9987 & 3.00 & 0.105 & 30.9 \\
+					\hline
+					Gradient Boosting \cite{friedman_greedy_2001} & 0.9573 & 0.9576 & 0.0085 & 0.9981 & 5.00 & 0.002 & 127.9 \\
+					\hline
+					Random Forest \cite{breiman_random_2001} & 0.9326 & 0.9314 & 0.0080 & 0.9951 & 6.00 & 0.002 & 63.3 \\
+					\hline
+					AdaBoost \cite{freund_decision-theoretic_1997} & 0.8796 & 0.8816 & 0.0130 & 0.9804 & 7.00 & 0.002 & 173.3 \\
+					\hline
+				\end{tabular}
+			\end{center}
+		\end{table}

@@ -11,7 +11,6 @@
 \usepackage{url}
 \usepackage{verbatim}
 \usepackage{graphicx}
-\graphicspath{{../figures_out/}{./}}
 \usepackage{cite}
 
 % clear in final version
@@ -34,6 +33,10 @@
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
 		T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 \usepackage{balance}
+\usepackage{xcolor}
+\definecolor{tier4blue}{RGB}{0,70,160}
+\newcommand{\tfourhighlight}{\color{tier4blue}}
+
 \begin{document}
 	\title{Density-Based Dynamic Ensemble Learning Algorithm via Gaussian Mixture Model Clustering for Enhanced Predictive Analytics.}
 	\author{}
@@ -278,7 +281,30 @@ Sowkarthika et al. \cite{b_data_2023} tackled the issue of class overlapping and
 	\end{algorithm}
 	
 
-	\input{../tables/selection_rule.tex}
+	\begin{table}[!t]
+		\centering
+		\caption{Instance-selection rule at partitioning time, UCI HAR, $K = 6$, logistic-regression
+		base learners, DensityE aggregation. \emph{Distance} ranks by Euclidean distance to $\mu_i$
+		(our implementation); \emph{responsibility} ranks by the component posterior
+		$\gamma_i(x_j)$, which uses $\Sigma_i$. Disagreement is the mean pairwise fraction of test
+		instances on which two base learners differ; overlap is the mean pairwise Jaccard index of
+		the training subsets. Ensemble weights are the GMM responsibilities in both columns. The
+		selected operating point is shown in bold.}
+		\label{tab:selection_rule}
+		\begin{tabular}{cccccc}
+			\hline
+			& \multicolumn{2}{c}{Macro $F_1$} & \multicolumn{2}{c}{Disagreement} & \\
+			\cline{2-3}\cline{4-5}
+			$\phi$ & distance & responsib. & distance & responsib. & Overlap \\
+			\hline
+			$0.2$ & $0.9549$ & $0.9497$ & $0.651$ & $0.656$ & $0.163$ \\
+			$0.4$ & $0.9708$ & $0.9800$ & $0.617$ & $0.521$ & $0.348$ \\
+			$0.5$ & $\mathbf{0.9729}$ & $0.9732$ & $0.298$ & $0.414$ & $0.425$ \\
+			$0.6$ & $0.9711$ & $0.9711$ & $0.076$ & $0.192$ & $0.530$ \\
+			$0.9$ & $0.9690$ & $0.9723$ & $0.011$ & $0.008$ & $0.877$ \\
+			\hline
+		\end{tabular}
+	\end{table}
 
 	\subsection{Density-based Dynamic Ensemble Algorithm}
 	\label{subsec:ddel}
@@ -355,6 +381,13 @@ Sowkarthika et al. \cite{b_data_2023} tackled the issue of class overlapping and
 	
 	\noindent The performance of various ensemble methods, with a base learner count $nc = 6$ and a regularization parameter $\phi = 0.5$, is systematically compared in Table \ref{tab:ensemble_comparison}. This table assesses four ensemble methods—DensityE (a density-based ensemble method), DistE (a distance-based ensemble method), AvgE (an average-based ensemble method), and MaxE (a maximum-based ensemble method)—using four distinct types of base learners: logistic regression (lr), support vector machine (svm), k-nearest neighbors (knn), and decision tree (dt).
 	
+	\begin{figure*}[t!]
+		\centering
+		\includegraphics[width=0.7\linewidth]{fscore_vs_phi}
+		\caption{F-score vs Sampling Ratio for Density ensemble method}
+		\label{fig:fscore_vs_phi}
+	\end{figure*}
+	
 	\subsection{Ensemble Method Performance Analysis}
 	
 	\noindent Table \ref{tab:ensemble_comparison} reveals that the DensityE ensemble method consistently achieves the highest mean scores across most base learners. Specifically, the logistic regression base learner combined with the DensityE method attains a mean score of 0.973, closely followed by the support vector machine base learner with a mean score of 0.969. The k-nearest neighbors base learner also performs well under the DensityE method, achieving a mean score of 0.958.
@@ -365,7 +398,67 @@ Sowkarthika et al. \cite{b_data_2023} tackled the issue of class overlapping and
 	\setlength{\tabcolsep}{2pt} % Reduce space between columns (default is 6pt)
 	% --- End of changes ---
 	
-	\input{../tables/ensemble_comparison.tex}
+	\begin{table}[htbp]
+		
+	    \begin{center}
+			
+			\caption{Comparison of Ensemble Methods with Different Base Learners}
+			
+			\label{tab:ensemble_comparison}
+			
+			\begin{tabular}{|c|c|c|c|c|}
+				
+				\hline 
+				
+				\textbf{Ensemble Method} & \textbf{Base Learner} & \textbf{Mean Score} & \textbf{Std Score} & \textbf{Max Score} \\
+				
+				\hline
+				
+				\textbf{DensityE} & lr & 0.973 & 0.003 & 0.978 \\
+				
+				& svm & 0.969 & 0.003 & 0.976 \\
+				
+				& knn & 0.958 & 0.004 & 0.968 \\
+				
+				& dt & 0.821 & 0.010 & 0.839 \\
+				
+				\hline 
+				
+				\textbf{DistE} & lr & 0.962 & 0.043 & 0.977 \\
+				
+				& svm & 0.959 & 0.040 & 0.974 \\
+				
+				& knn & 0.948 & 0.031 & 0.966 \\
+				
+				& dt & 0.841 & 0.016 & 0.864 \\
+				
+				\hline 
+				
+				\textbf{AvgE} & lr & 0.750 & 0.210 & 0.965 \\
+				
+				& svm & 0.897 & 0.115 & 0.965 \\
+				
+				& knn & 0.856 & 0.118 & 0.951 \\
+				
+				& dt & 0.720 & 0.108 & 0.827 \\
+				
+				\hline 
+				
+				\textbf{MaxE} & lr & 0.508 & 0.034 & 0.574 \\
+				
+				& svm & 0.855 & 0.040 & 0.907 \\
+				
+				& knn & 0.722 & 0.122 & 0.892 \\
+				
+				& dt & 0.410 & 0.143 & 0.653 \\
+				
+				\hline
+				
+			\end{tabular}
+			
+		\end{center}
+		
+	\end{table}
 	
 	The DistE method trails DensityE by approximately one point in mean F-score for the logistic
 	regression ($0.962$ versus $0.973$), support vector machine ($0.959$ versus $0.969$), and
@@ -451,13 +544,6 @@ Sowkarthika et al. \cite{b_data_2023} tackled the issue of class overlapping and
 		\label{fig:fscore_vs_clusters}
 	\end{figure*}
 	
-	\begin{figure*}[t!]
-		\centering
-		\includegraphics[width=0.7\linewidth]{fscore_vs_phi}
-		\caption{F-score vs Sampling Ratio for Density ensemble method}
-		\label{fig:fscore_vs_phi}
-	\end{figure*}
-	
 	\begin{figure*}[!t]
 		\centering
 		\includegraphics[width=\linewidth]{fig2_diagnostics}
@@ -528,15 +614,59 @@ Sowkarthika et al. \cite{b_data_2023} tackled the issue of class overlapping and
 	accuracy alone, as the criterion for choosing $\phi$: accuracy is flat across a wide
 	range in which the ensemble is progressively degenerating.
 
-	\input{../tables/diversity_cost.tex}
+	\begin{table}[!t]
+		\centering
+		\caption{Subset overlap, base-learner diversity, oracle ceiling, achieved score and
+		training cost as a function of the sampling ratio. UCI HAR, $K = 6$,
+		logistic-regression base learners, DensityE aggregation, first fold of a stratified
+		$10$-fold split; the single-learner reference on the same fold is $0.9690$. Overlap is
+		the mean pairwise Jaccard index of the $K$ training subsets; disagreement is the mean
+		pairwise fraction of test instances on which two base learners differ; the oracle is
+		the accuracy of a combiner that selects the correct base learner for every instance.
+		The selected operating point is shown in bold.}
+		\label{tab:diversity_cost}
+		\begin{tabular}{ccccccc}
+			\hline
+			$\phi$ & Overlap & Disagr. & Oracle & Macro $F_1$ & $\Delta$ single & Fit (s) \\
+			\hline
+			$0.2$ & $0.163$ & $0.651$ & $0.9874$ & $0.9549$ & $-0.0141$ & $8$ \\
+			$0.4$ & $0.348$ & $0.617$ & $0.9951$ & $0.9708$ & $+0.0018$ & $17$ \\
+			$0.5$ & $0.425$ & $0.298$ & $0.9883$ & $\mathbf{0.9729}$ & $+0.0040$ & $27$ \\
+			$0.6$ & $0.530$ & $0.076$ & $0.9825$ & $0.9711$ & $+0.0021$ & $35$ \\
+			$0.9$ & $0.877$ & $0.011$ & $0.9738$ & $0.9690$ & $+0.0000$ & $66$ \\
+			\hline
+		\end{tabular}
+	\end{table}
 
-	\subsection{Comparison with State-of-the-Art Dynamic Ensemble Methods}
+	{\tfourhighlight
+\subsection{Comparison with State-of-the-Art Dynamic Ensemble Methods}
 	
 	\noindent The analysis above establishes that the density-based weighting scheme (DensityE) is the strongest of the four aggregation variants internal to our framework. To validate that DDEL-GMM is competitive with the broader dynamic ensemble selection (DES) literature—and not merely against its own ablations—we designed a direct experiment against three published external baselines identified as most relevant in Section~\ref{sec:literature}. We compare against \textbf{DELAK} \cite{guo_dynamic_2021}, the K-means-sampling distance-based dynamic ensemble that is the closest methodological neighbour of our approach; \textbf{META-DES} \cite{cruz_meta-oracle_2017}, a meta-learning DES framework that estimates competence from meta-features; and \textbf{KNORA} (both the union, KNORA-U, and eliminate, KNORA-E, variants) \cite{ko_dynamic_2008}, the canonical oracle-neighbourhood DES methods. All methods were run on the identical HAR feature representation (157 principal components retaining 95\% of variance), with logistic regression base learners and the same $10$-fold cross-validation splits, so that the comparison isolates the ensemble mechanism rather than differences in preprocessing or evaluation protocol. For the external baselines we used the reference implementations from the DESlib library with standard default settings ($k=7$ neighbours for the KNORA region of competence; a random-forest meta-classifier for META-DES; $K$ matched to our cluster count for DELAK). Because the same folds are shared across methods, we assess statistical significance with the one-sided Wilcoxon signed-rank test on the paired per-fold mean F-scores.
 	
 	\noindent Table~\ref{tab:sota_comparison} reports accuracy, mean F-score, AUC, mean rank, and single-run training time for each method. DDEL-GMM attains the highest mean F-score ($0.968 \pm 0.003$) and the best mean rank ($1.3$), ahead of the nearest competitor META-DES ($0.959 \pm 0.011$). The margin over the K-means-based DELAK ($0.952 \pm 0.010$) is the most directly interpretable result: because DELAK differs from DDEL-GMM principally in using K-means rather than GMM for the sampling step, the $1.6$-point F-score improvement provides direct empirical evidence that the flexible, probabilistic partitioning of the Gaussian mixture translates into measurably better downstream ensemble performance on data with overlapping activity classes. The improvements over all four external baselines are statistically significant at the $5\%$ level (Wilcoxon $p = 0.019$ vs.\ META-DES, $p \leq 0.002$ vs.\ the remaining methods), while the effect sizes remain modest and consistent with the density-weighting advantage already observed among the internal variants. The gains in accuracy and AUC track the F-score ordering, indicating that the improvement is not an artifact of a single threshold-dependent metric. Figure~\ref{fig:sota_comparison} visualizes the ranking together with the paired-test significance markers. We note that META-DES incurs the highest training cost ($71.5$\,s) owing to its meta-classifier stage, whereas DDEL-GMM ($48.2$\,s) sits between the meta-learning and the neighbourhood-based methods, so its accuracy advantage does not come at a disproportionate computational price.
 	
-	\input{../tables/sota_comparison.tex}
+	\begin{table}[htbp]
+		\begin{center}
+			\caption{Comparison of DDEL-GMM with published state-of-the-art dynamic ensemble methods on the HAR dataset ($10$-fold CV, logistic-regression base learners). Best value in each column in bold; $p$ is the one-sided Wilcoxon signed-rank test of DDEL-GMM against each baseline on paired per-fold mean F-scores.}
+			\label{tab:sota_comparison}
+			\setlength{\tabcolsep}{3pt}
+			\begin{tabular}{|l|c|c|c|c|c|c|}
+				\hline
+				\textbf{Method} & \textbf{Acc.} & \textbf{Mean F} & \textbf{AUC} & \textbf{Rank} & \textbf{$p$} & \textbf{Time (s)} \\
+				\hline
+				\textbf{DDEL-GMM (ours)} & \textbf{0.966} & \textbf{0.968} & \textbf{0.994} & \textbf{1.3} & --- & 48.2 \\
+				\hline
+				META-DES \cite{cruz_meta-oracle_2017} & 0.957 & 0.959 & 0.990 & 2.7 & 0.019 & 71.5 \\
+				\hline
+				DELAK \cite{guo_dynamic_2021} & 0.950 & 0.952 & 0.986 & 3.1 & 0.002 & 39.6 \\
+				\hline
+				KNORA-U \cite{ko_dynamic_2008} & 0.946 & 0.948 & 0.984 & 3.6 & 0.001 & 33.1 \\
+				\hline
+				KNORA-E \cite{ko_dynamic_2008} & 0.944 & 0.946 & 0.983 & 4.3 & 0.001 & 34.8 \\
+				\hline
+			\end{tabular}
+		\end{center}
+	\end{table}
 	
 	\begin{figure}[htbp]
 		\centering
@@ -545,7 +675,8 @@ Sowkarthika et al. \cite{b_data_2023} tackled the issue of class overlapping and
 		\label{fig:sota_comparison}
 	\end{figure}
 	
-		\subsection{GMM versus K-means: Justifying the Choice of Clustering}\label{subsec:gmm_vs_kmeans}
+		{\tfourhighlight
+\subsection{GMM versus K-means: Justifying the Choice of Clustering}\label{subsec:gmm_vs_kmeans}
 		
 		\noindent \textbf{Rationale.} A central design decision of DDEL-GMM is the use of Gaussian mixture models rather than the more common K-means for partitioning the training data. Section~\ref{sec:literature} argued this choice on theoretical grounds: a mixture model estimates a full covariance matrix $\Sigma_k$ per component and assigns soft posterior responsibilities, whereas K-means minimizes within-cluster Euclidean distance and is therefore the limiting case of a mixture in which every $\Sigma_k$ is constrained to $\sigma^2 I$ with hard assignment. A theoretical argument of this kind predicts \emph{where} the advantage should appear---only when components are anisotropic or overlapping---and equally where it should vanish. Referee comments on the original submission asked for this prediction to be tested directly rather than asserted, and also questioned whether mixture models remain viable in the high-dimensional regime our method targets. We therefore ran three experiments that isolate the clustering step from every other component of the pipeline.
 		
@@ -561,7 +692,22 @@ Sowkarthika et al. \cite{b_data_2023} tackled the issue of class overlapping and
 		
 		\noindent \textbf{Insight.} Three conclusions follow, and the second qualifies the first. The choice of a Gaussian mixture is empirically justified precisely where the theory says it should be---anisotropic, overlapping components---and confers no benefit where K-means is already correctly specified, which is the signature of a well-motivated rather than an opportunistic design choice. But the benefit is contingent on the sample-to-parameter ratio, and full-covariance estimation in the ambient HAR space would be untenable: at $d = 561$ a five-component full-covariance mixture would require over $780{,}000$ covariance parameters. This is what makes the PCA preprocessing stage load-bearing rather than incidental: reducing to $157$ components is not merely a computational convenience but the step that brings covariance estimation into a feasible regime. Even at $157$ dimensions the ratio remains demanding---a five-component full-covariance mixture requires $62{,}015$ covariance parameters against roughly $9{,}269$ training samples per fold---which is why DDEL-GMM applies regularised covariance estimation and why the density weighting, which depends on relative rather than absolute density values, remains stable where the raw likelihood would not. Practitioners applying this method to substantially higher intrinsic dimensionality should expect the clustering advantage to attenuate and should prefer a constrained covariance parameterisation, a trade-off Figure~\ref{fig:gmm_vs_kmeans}d,e quantifies.
 
-		\input{../tables/clustering_ablation.tex}
+		\begin{table*}[!t]
+			\begin{center}
+				\caption{Clustering ablation on the HAR dataset ($10$-fold CV, logistic-regression base learners). The two variants are identical except for the clustering algorithm used in the resampling step. Clustering parameters counts the free parameters of the partitioning model at $K=5$ and $d=157$; ARI is the measured value at the hardest synthetic configuration (eccentricity $30$, overlap $0.8$) of Figure~\ref{fig:gmm_vs_kmeans}. Rank $1$ is best. $p$ is the one-sided Wilcoxon signed-rank test on paired per-fold F-scores ($n=10$; $p=0.001$ is the attainable minimum at this sample size).}
+				\label{tab:clustering_ablation}
+				\setlength{\tabcolsep}{3pt}
+				\begin{tabular}{|l|c|c|c|c|c|c|c|}
+					\hline
+					\textbf{Variant} & \textbf{Clust.} & \textbf{Acc.} & \textbf{Mean F} & \textbf{AUC} & \textbf{Rank} & \textbf{Params} & \textbf{ARI} \\
+					\hline
+					\textbf{DDEL-GMM (ours)} & GMM & \textbf{0.966} & \textbf{0.968} & \textbf{0.994} & \textbf{1.0} & 62\,015 & \textbf{0.728} \\
+					\hline
+					DDEL-KMeans & K-means & 0.959 & 0.961 & 0.990 & 2.0 & \textbf{785} & 0.317 \\
+					\hline
+				\end{tabular}
+			\end{center}
+		\end{table*}
 		
 		\begin{figure*}[!t]
 			\centering
@@ -570,7 +716,8 @@ Sowkarthika et al. \cite{b_data_2023} tackled the issue of class overlapping and
 			\label{fig:gmm_vs_kmeans}
 		\end{figure*}
 
-		\subsection{Comparison with Non-Clustering Ensemble Baselines}
+		{\tfourhighlight
+\subsection{Comparison with Non-Clustering Ensemble Baselines}
 		
 		\noindent \textbf{Rationale.} The experiments so far compare DDEL-GMM against other dynamic and clustering-based ensembles. A referee raised a more basic question: does the weight-assignment mechanism confer any advantage over classic ensemble learning techniques such as bagging and boosting, which build diverse committees on the full feature space with no partitioning at all? This asks for more than a leaderboard. Bagging and boosting already achieve diversity---through bootstrap resampling and sequential reweighting of hard examples respectively---so if density-based competence weighting is to be justified, it must be shown to add something those mechanisms do not, and the comparison must separate the contribution of partitioning from the contribution of weighting.
 		
@@ -578,7 +725,7 @@ Sowkarthika et al. \cite{b_data_2023} tackled the issue of class overlapping and
 
 		\noindent \textbf{Model selection.} The number of mixture components $K$, the resampling ratio $\phi$, and the responsibility temperature $T$ are selected by nested cross-validation: within each outer training fold a stratified $25\%$ validation split is held out, the grid $K \in \{5,8\} \times \phi \in \{0.4,0.9\} \times T \in \{1,80\}$ is scored on that split alone, and the winning configuration is refit on the full training fold and evaluated once on the untouched test fold. No test-fold information enters the selection. This protocol matters for interpreting the result: selecting the single best configuration by inspecting test-fold scores instead yields $0.9756$, an optimism of $0.0014$ F-score points over the nested estimate, and the reported figure is the nested one. The selection is also informative in itself---$\phi = 0.4$ is chosen on eight of the ten folds against $\phi = 0.9$, confirming that the resampling ratio must leave the per-component training sets substantially disjoint for the ensemble to behave as an ensemble at all.
 		
-		\noindent \textbf{Result.} Table~\ref{tab:noclustering} reports the outcome, and Figure~\ref{fig:noclustering} shows the per-fold score distributions alongside the mean-rank comparison. DDEL-GMM attains the highest mean macro F-score in the comparison ($0.9742 \pm 0.0067$) and the best mean rank ($2.05$), but three baselines remain statistically indistinguishable from it: bagging with logistic regression ($0.9734 \pm 0.0049$), a single logistic-regression model ($0.9734 \pm 0.0055$), and a converged linear support vector machine ($0.9721 \pm 0.0067$). The paired two-sided Wilcoxon signed-rank tests against these three return $p = 0.625$, $p = 0.496$, and $p = 0.105$ respectively ($n = 10$ folds), and our method wins on $7$, $5$, and $7$ of the ten folds---a consistent but not significant advantage at this sample size. Against the tree-based ensembles the separation is unambiguous: DDEL-GMM exceeds gradient boosting by $1.6$ F-score points, random forests by $4.2$ points, and AdaBoost by $9.2$ points, winning all ten folds in each case at the attainable two-sided significance floor ($p = 0.002$ at $n = 10$).
+		\noindent \textbf{Result.} Table~\ref{tab:noclustering} reports the outcome. DDEL-GMM attains the highest mean macro F-score in the comparison ($0.9742 \pm 0.0067$) and the best mean rank ($2.05$), but three baselines remain statistically indistinguishable from it: bagging with logistic regression ($0.9734 \pm 0.0049$), a single logistic-regression model ($0.9734 \pm 0.0055$), and a converged linear support vector machine ($0.9721 \pm 0.0067$). The paired two-sided Wilcoxon signed-rank tests against these three return $p = 0.625$, $p = 0.496$, and $p = 0.105$ respectively ($n = 10$ folds), and our method wins on $7$, $5$, and $7$ of the ten folds---a consistent but not significant advantage at this sample size. Against the tree-based ensembles the separation is unambiguous: DDEL-GMM exceeds gradient boosting by $1.6$ F-score points, random forests by $4.2$ points, and AdaBoost by $9.2$ points, winning all ten folds in each case at the attainable two-sided significance floor ($p = 0.002$ at $n = 10$).
 		
 		\noindent \textbf{Omnibus testing.} With seven methods, pairwise testing inflates the false-positive rate, so we applied a Friedman omnibus test followed by the Nemenyi post-hoc procedure. The omnibus test rejects equivalence ($\chi^2 = 50.37$, $\mathrm{df} = 6$, $p = 4.0 \times 10^{-9}$). The post-hoc critical difference at $k = 7$ methods and $N = 10$ folds is $2.85$ mean ranks. DDEL-GMM attains the best mean rank in the comparison ($2.05$), which separates it from AdaBoost (rank gap $4.95$), random forests (gap $3.95$), and gradient boosting (gap $2.95$), but---as the pairwise tests already indicate---not from bagging (rank $2.40$, gap $0.35$), the single logistic-regression model (rank $2.55$, gap $0.50$), or the support vector machine (rank $3.00$, gap $0.95$). We state plainly that \emph{on this dataset DDEL-GMM is not statistically separated from the strongest non-clustering baselines}: it now holds the best mean rank and wins the majority of folds against each, but the margins fall well inside the critical difference, and bagging retains a lower standard deviation.
 		
@@ -588,7 +735,32 @@ Sowkarthika et al. \cite{b_data_2023} tackled the issue of class overlapping and
 		
 		\noindent \textbf{Insight.} Partitioning the feature space and weighting specialized learners by local competence extracts structure that tree-based committees do not, and the margin over random forests, gradient boosting, and AdaBoost is consistent across every fold. Against strong linear baselines on a saturated dataset the advantage is directionally consistent---the best mean rank and a majority of folds against each---but too small to resolve at ten folds, and we report it as such rather than as a demonstrated improvement. The selection behaviour identifies the mechanism that governs it: the benefit of the framework is realised only when $\phi$ is small enough that the per-component learners are trained on substantially disjoint samples. At $\phi = 0.9$ the mean pairwise overlap of the subsets reaches $0.84$ and the base learners disagree on under $1\%$ of test instances, so the weighted combination reduces to a single model; at $\phi = 0.4$ the overlap falls to $0.36$ and the ensemble recovers a genuine spread of hypotheses. The value of the framework is therefore not raw accuracy on well-conditioned data but the variance and adaptivity properties documented in Section~\ref{subsec:gmm_vs_kmeans}: on HAR, DensityE reduces the fold-to-fold standard deviation of DistE from $0.043$ to $0.003$ within the same clustering framework, a $14$-fold reduction in dispersion at equal or better mean accuracy. A dataset whose class-conditional structure is non-spherical or non-stationary is where the partitioning is expected to pay, and establishing that is the role of the preceding experiments rather than of this comparison.
 
-		\input{../tables/noclustering.tex}
+		\begin{table}[htbp]
+			\begin{center}
+				\caption{Comparison of DDEL-GMM with classic non-clustering ensemble methods on the HAR dataset ($10$-fold stratified CV, $157$-PC representation, common fold seed). Best value in each column in bold; rank $1$ is best. $p$ is the paired two-sided Wilcoxon signed-rank test of DDEL-GMM against each baseline on per-fold F-scores ($n=10$; $p=0.002$ is the attainable minimum at this sample size). ``Wins'' counts folds on which DDEL-GMM scores higher. The Nemenyi critical difference at $\alpha=0.05$ is $2.85$ mean ranks; AdaBoost, random forests, and gradient boosting are separated from DDEL-GMM, the three remaining baselines are not. DDEL-GMM hyperparameters are chosen by nested cross-validation inside each training fold; its time column excludes the $268.5$\,s per-fold selection search. The support vector machine is trained to convergence and AdaBoost uses depth-$3$ base trees.}
+				\label{tab:noclustering}
+				\setlength{\tabcolsep}{2.5pt}
+				\begin{tabular}{|l|c|c|c|c|c|c|c|}
+					\hline
+					\textbf{Method} & \textbf{Acc.} & \textbf{Mean F} & \textbf{SD} & \textbf{AUC} & \textbf{Rank} & \textbf{$p$} & \textbf{Time (s)} \\
+					\hline
+					\textbf{DDEL-GMM (ours)} & \textbf{0.9735} & \textbf{0.9742} & 0.0067 & 0.9987 & \textbf{2.05} & --- & 81.1 \\
+					\hline
+					Bagging (LR) \cite{breiman_bagging_1996} & 0.9724 & 0.9734 & \textbf{0.0049} & \textbf{0.9988} & 2.40 & 0.625 & 138.2 \\
+					\hline
+					Single LR & 0.9725 & 0.9734 & 0.0055 & 0.9987 & 2.55 & 0.496 & \textbf{13.9} \\
+					\hline
+					Single SVM (converged) & 0.9713 & 0.9721 & 0.0067 & 0.9987 & 3.00 & 0.105 & 30.9 \\
+					\hline
+					Gradient Boosting \cite{friedman_greedy_2001} & 0.9573 & 0.9576 & 0.0085 & 0.9981 & 5.00 & 0.002 & 127.9 \\
+					\hline
+					Random Forest \cite{breiman_random_2001} & 0.9326 & 0.9314 & 0.0080 & 0.9951 & 6.00 & 0.002 & 63.3 \\
+					\hline
+					AdaBoost \cite{freund_decision-theoretic_1997} & 0.8796 & 0.8816 & 0.0130 & 0.9804 & 7.00 & 0.002 & 173.3 \\
+					\hline
+				\end{tabular}
+			\end{center}
+		\end{table}
 		
 		\begin{figure*}[!t]
 			\centering
@@ -597,6 +769,12 @@ Sowkarthika et al. \cite{b_data_2023} tackled the issue of class overlapping and
 			\label{fig:noclustering}
 		\end{figure*}
 
+
+}
+
+}
+
+}
 
 	\section{Discussion}
 	

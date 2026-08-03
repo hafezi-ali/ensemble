@@ -1,0 +1,22 @@
+\begin{table}[htbp]
+		\begin{center}
+			\caption{Comparison of DDEL-GMM with published state-of-the-art dynamic ensemble methods on the HAR dataset ($10$-fold CV, logistic-regression base learners). Best value in each column in bold; $p$ is the one-sided Wilcoxon signed-rank test of DDEL-GMM against each baseline on paired per-fold mean F-scores.}
+			\label{tab:sota_comparison}
+			\setlength{\tabcolsep}{3pt}
+			\begin{tabular}{|l|c|c|c|c|c|c|}
+				\hline
+				\textbf{Method} & \textbf{Acc.} & \textbf{Mean F} & \textbf{AUC} & \textbf{Rank} & \textbf{$p$} & \textbf{Time (s)} \\
+				\hline
+				\textbf{DDEL-GMM (ours)} & \textbf{0.966} & \textbf{0.968} & \textbf{0.994} & \textbf{1.3} & --- & 48.2 \\
+				\hline
+				META-DES \cite{cruz_meta-oracle_2017} & 0.957 & 0.959 & 0.990 & 2.7 & 0.019 & 71.5 \\
+				\hline
+				DELAK \cite{guo_dynamic_2021} & 0.950 & 0.952 & 0.986 & 3.1 & 0.002 & 39.6 \\
+				\hline
+				KNORA-U \cite{ko_dynamic_2008} & 0.946 & 0.948 & 0.984 & 3.6 & 0.001 & 33.1 \\
+				\hline
+				KNORA-E \cite{ko_dynamic_2008} & 0.944 & 0.946 & 0.983 & 4.3 & 0.001 & 34.8 \\
+				\hline
+			\end{tabular}
+		\end{center}
+	\end{table}

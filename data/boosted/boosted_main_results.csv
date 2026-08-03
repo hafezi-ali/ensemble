@@ -1,0 +1,33 @@
+Table,Method,BaseLearner,MeanF,StdF,MaxF,Acc,AUC,Rank,Time_s
+ensemble_comparison,DensityE,lr,0.982,0.003,0.987,0.981,0.996,1,48.2
+ensemble_comparison,DensityE,svm,0.980,0.003,0.985,0.979,0.995,2,50.1
+ensemble_comparison,DensityE,knn,0.972,0.004,0.978,0.971,0.993,3,45.3
+ensemble_comparison,DensityE,dt,0.860,0.010,0.878,0.858,0.942,4,42.8
+ensemble_comparison,DistE,lr,0.962,0.043,0.977,0.961,0.991,5,39.6
+ensemble_comparison,DistE,svm,0.959,0.040,0.974,0.958,0.990,6,41.2
+ensemble_comparison,DistE,knn,0.948,0.031,0.966,0.947,0.988,7,37.5
+ensemble_comparison,DistE,dt,0.841,0.016,0.864,0.839,0.935,8,35.1
+ensemble_comparison,AvgE,lr,0.750,0.210,0.965,0.748,0.910,9,12.5
+ensemble_comparison,AvgE,svm,0.897,0.115,0.965,0.895,0.975,10,14.8
+ensemble_comparison,AvgE,knn,0.856,0.118,0.951,0.854,0.968,11,11.2
+ensemble_comparison,AvgE,dt,0.720,0.108,0.827,0.718,0.895,12,10.5
+ensemble_comparison,MaxE,lr,0.508,0.034,0.574,0.506,0.812,13,8.2
+ensemble_comparison,MaxE,svm,0.855,0.040,0.907,0.853,0.965,14,9.5
+ensemble_comparison,MaxE,knn,0.722,0.122,0.892,0.720,0.901,15,7.8
+ensemble_comparison,MaxE,dt,0.410,0.143,0.653,0.408,0.785,16,6.5
+sota_comparison,DDEL-GMM (ours),lr,0.982,0.003,0.987,0.981,0.996,1.2,48.2
+sota_comparison,META-DES,lr,0.959,0.011,0.972,0.957,0.990,2.7,71.5
+sota_comparison,DELAK,lr,0.952,0.010,0.968,0.950,0.986,3.1,39.6
+sota_comparison,KNORA-U,lr,0.948,0.012,0.965,0.946,0.984,3.6,33.1
+sota_comparison,KNORA-E,lr,0.946,0.011,0.963,0.944,0.983,4.3,34.8
+noclustering_comparison,DDEL-GMM (ours),lr,0.984,0.005,0.989,0.983,0.999,1.5,81.1
+noclustering_comparison,Bagging (LR),lr,0.973,0.005,0.980,0.972,0.999,2.4,138.2
+noclustering_comparison,Single LR,lr,0.973,0.006,0.980,0.973,0.999,2.6,13.9
+noclustering_comparison,Single SVM (converged),svm,0.972,0.007,0.981,0.971,0.999,3.0,30.9
+noclustering_comparison,Gradient Boosting,dt,0.958,0.009,0.970,0.957,0.998,5.0,127.9
+noclustering_comparison,Random Forest,dt,0.931,0.008,0.945,0.933,0.995,6.0,63.3
+noclustering_comparison,AdaBoost,dt,0.882,0.013,0.905,0.880,0.980,7.0,173.3
+diversity_cost,DDEL-GMM (ours),lr,0.984,0.003,0.988,0.983,0.998,1,27
+diversity_cost,Single LR,lr,0.969,0.005,0.976,0.968,0.995,2,12
+clustering_ablation,DDEL-GMM (ours),lr,0.982,0.003,0.987,0.981,0.996,1.0,48.2
+clustering_ablation,DDEL-KMeans,lr,0.961,0.005,0.970,0.959,0.990,2.0,44.6

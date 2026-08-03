@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(sudo find . -maxdepth 1 -not \\\\\\( -user ali -a -group ali \\\\\\) -not -name '.' -not -name '.git' -not -name '.claude' -print0)",
+      "Bash(sudo xargs -0 -r chown -R ali:ali)",
+      "Bash(sudo chown -R ali:ali .git)",
+      "Bash(git -C /home/ali/Documents/ensemble status)",
+      "Bash(git mv *)"
+    ]
+  },
+  "enabledMcpjsonServers": [
+    "code-review-graph"
+  ]
+}

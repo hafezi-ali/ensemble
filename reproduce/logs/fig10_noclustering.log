@@ -1,0 +1,8 @@
+CD=2.848
+DDEL-GMM (ours)      2.05
+Bagging (LR)         2.40
+Single LR            2.55
+Single SVM           3.00
+Gradient Boosting    5.00
+Random Forest        6.00
+AdaBoost             7.00

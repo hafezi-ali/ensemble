@@ -1,0 +1,17 @@
+ensemble_method,base_learner,mean_score,std_score,max_score
+DensityE,lr,0.973,0.003,0.978
+DensityE,svm,0.969,0.003,0.976
+DensityE,knn,0.958,0.004,0.968
+DensityE,dt,0.821,0.01,0.839
+DistE,lr,0.962,0.043,0.977
+DistE,svm,0.959,0.04,0.974
+DistE,knn,0.948,0.031,0.966
+DistE,dt,0.841,0.016,0.864
+AvgE,lr,0.75,0.21,0.965
+AvgE,svm,0.897,0.115,0.965
+AvgE,knn,0.856,0.118,0.951
+AvgE,dt,0.72,0.108,0.827
+MaxE,lr,0.508,0.034,0.574
+MaxE,svm,0.855,0.04,0.907
+MaxE,knn,0.722,0.122,0.892
+MaxE,dt,0.41,0.143,0.653
