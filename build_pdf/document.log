@@ -1186,7 +1186,7 @@ Overfull \hbox (53.09612pt too wide) in paragraph at lines 6--25
 File: noclustering_comparison.pdf Graphic file (type pdf)
 <use noclustering_comparison.pdf>
  [17]
-Underfull \vbox (badness 4279) has occurred while \output is active []
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 (document.bbl [18]
@@ -1217,13 +1217,11 @@ x-text;!
 ** WARNING: IEEEtran.bst: No hyphenation pattern has been
 ** loaded for the language `en'. Using the pattern for
 ** the default language instead.
-[19]) [20
-
-] (document.aux)
+[19]) [20] (document.aux)
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
 Package rerunfilecheck Info: File `document.out' has not changed.
 (rerunfilecheck)             Checksum: AD98CC0D60E0245339002BDD492652B5;4774.
  )
-Output written on document.xdv (20 pages, 1025044 bytes).
+Output written on document.xdv (20 pages, 1030596 bytes).
