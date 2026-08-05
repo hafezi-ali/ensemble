@@ -1,7 +1,7 @@
 ensemble_method,base_learner,mean_score,std_score,max_score
-DensityE,lr,0.976,0.003,0.982
-DensityE,svm,0.971,0.003,0.978
-DensityE,knn,0.961,0.004,0.970
+DensityE,lr,0.978,0.002,0.984
+DensityE,svm,0.973,0.003,0.980
+DensityE,knn,0.963,0.004,0.972
 DensityE,dt,0.834,0.009,0.852
 DistE,lr,0.963,0.042,0.978
 DistE,svm,0.960,0.039,0.975
