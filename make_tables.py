@@ -365,7 +365,7 @@ SLOTS = {
         "caption": ("Direct comparison of DDEL-GMM against DELAK and FH-DES on the HAR "
                     "dataset under an identical $10$-fold stratified protocol. Best value "
                     "in each column in bold; $p$ is the two-sided Wilcoxon signed-rank "
-                    "test of DDEL-GMM against each baseline on paired per-fold scores."),
+                    "test of DDEL-GMM against each baseline on paired per-fold scores (FH-DES $p$ uses normal approximation as per-fold data were unavailable)."),
         "label": "tab:delak_fhdes",
         "align": "|l|c|c|c|c|c|c|",
         "headers": ["Method", "Acc.", "Mean F", "AUC", "Rank", "$p$", "Time (s)"],

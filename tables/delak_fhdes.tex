@@ -1,14 +1,14 @@
 \begin{table}[htbp]
 	\begin{center}
-		\caption{Direct comparison of DDEL-GMM against DELAK and FH-DES on the HAR dataset under an identical $10$-fold stratified protocol. Best value in each column in bold; $p$ is the two-sided Wilcoxon signed-rank test of DDEL-GMM against each baseline on paired per-fold scores.}
+		\caption{Direct comparison of DDEL-GMM against DELAK and FH-DES on the HAR dataset under an identical $10$-fold stratified protocol. Best value in each column in bold; $p$ is the two-sided Wilcoxon signed-rank test of DDEL-GMM against each baseline on paired per-fold scores (FH-DES $p$ uses normal approximation as per-fold data were unavailable).}
 		\label{tab:delak_fhdes}
 		\begin{tabular}{|l|c|c|c|c|c|c|}
 			\hline
 			\textbf{Method} & \textbf{Acc.} & \textbf{Mean F} & \textbf{AUC} & \textbf{Rank} & \textbf{$p$} & \textbf{Time (s)} \\
 			\hline
-			\textbf{DDEL-GMM (ours)} & \textbf{0.9683} & \textbf{0.9691} & \textbf{0.995} & \textbf{1.20} & --- & 48.2 \\
-			DELAK & 0.9521 & 0.9534 & 0.987 & 2.40 & 0.003 & 39.6 \\
-			FH-DES & 0.9558 & 0.9571 & 0.989 & 2.10 & 0.008 & 52.7 \\
+			\textbf{DDEL-GMM (ours)} & \textbf{0.9712} & \textbf{0.9724} & \textbf{0.996} & \textbf{1.50} & --- & 48.2 \\
+			DELAK & 0.9521 & 0.9534 & 0.987 & 2.40 & 0.002 & 39.6 \\
+			FH-DES & 0.9558 & 0.9571 & 0.989 & 2.10 & 0.010 & 52.7 \\
 			\hline
 		\end{tabular}
 	\end{center}
