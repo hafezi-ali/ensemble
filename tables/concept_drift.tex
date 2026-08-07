@@ -1,0 +1,16 @@
+\begin{table}[htbp]
+	\begin{center}
+		\caption{Degradation of macro F-score across ten simulated concept-drift windows on the HAR dataset. $F_1^{(1)}$ and $F_1^{(10)}$ are the scores at the first and last drift points; $\Delta F_1$ is the total drop. The degradation ratio reports how many times more each baseline degrades relative to DDEL-GMM.}
+		\label{tab:concept_drift}
+		\setlength{\tabcolsep}{3pt}
+		\begin{tabular}{|l|c|c|c|c|}
+			\hline
+			\textbf{Method} & \textbf{$F_1^{(1)}$} & \textbf{$F_1^{(10)}$} & \textbf{$\Delta F_1$} & \textbf{Degradation ratio} \\
+			\hline
+			\textbf{DDEL-GMM (ours)} & \textbf{0.9749} & \textbf{0.9675} & \textbf{0.0074} & $1.0\times$ \\
+			DELAK & 0.9547 & 0.9284 & 0.0263 & $3.6\times$ \\
+			Single LR & 0.9698 & 0.9051 & 0.0647 & $8.7\times$ \\
+			\hline
+		\end{tabular}
+	\end{center}
+\end{table}
