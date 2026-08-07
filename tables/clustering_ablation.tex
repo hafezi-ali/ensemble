@@ -2,7 +2,7 @@
 			\begin{center}
 				\caption{Clustering ablation on the HAR dataset ($10$-fold CV, logistic-regression base learners). The two variants are identical except for the clustering algorithm used in the resampling step. Clustering parameters counts the free parameters of the partitioning model at $K=5$ and $d=157$; ARI is the measured value at the hardest synthetic configuration (eccentricity $30$, overlap $0.8$) of Figure~\ref{fig:gmm_vs_kmeans}. Rank $1$ is best. $p$ is the two-sided Wilcoxon signed-rank test on paired per-fold F-scores ($n=10$; $p=0.002$ is the attainable two-sided minimum at this sample size).}
 				\label{tab:clustering_ablation}
-				\setlength{\tabcolsep}{3pt}
+				\setlength{\tabcolsep}{2pt}
 				\begin{tabular}{|l|c|c|c|c|c|c|c|}
 					\hline
 					\textbf{Variant} & \textbf{Clust.} & \textbf{Acc.} & \textbf{Mean F} & \textbf{AUC} & \textbf{Rank} & \textbf{Params} & \textbf{ARI} \\

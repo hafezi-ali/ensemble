@@ -2,18 +2,19 @@
 	\begin{center}
 		\caption{GMM against K-means partitioning across synthetic cluster geometries, isolating the effect of the clustering model while holding the density-based weighting fixed. Best value per geometry in bold.}
 		\label{tab:nonspherical}
+		\setlength{\tabcolsep}{3pt}
 		\begin{tabular}{|l|l|c|c|c|}
 			\hline
-			\textbf{Clustering} & \textbf{Geometry} & \textbf{Acc.} & \textbf{ARI} & \textbf{Silhouette} \\
+			\textbf{Clust.} & \textbf{Geometry} & \textbf{Acc.} & \textbf{ARI} & \textbf{Sil.} \\
 			\hline
 			GMM & spherical & 0.941 & 0.712 & 0.69 \\
 			K-means & spherical & 0.939 & 0.698 & 0.67 \\
 			GMM & overlapping & 0.919 & 0.654 & 0.60 \\
 			K-means & overlapping & 0.883 & 0.521 & 0.51 \\
-			GMM & non-spherical & 0.926 & 0.687 & 0.62 \\
-			K-means & non-spherical & 0.861 & 0.412 & 0.45 \\
-			GMM & non-spherical+overlapping & 0.893 & 0.623 & 0.57 \\
-			K-means & non-spherical+overlapping & 0.825 & 0.348 & 0.40 \\
+			GMM & non-sph. & 0.926 & 0.687 & 0.62 \\
+			K-means & non-sph. & 0.861 & 0.412 & 0.45 \\
+			GMM & non-sph.+overlap & 0.893 & 0.623 & 0.57 \\
+			K-means & non-sph.+overlap & 0.825 & 0.348 & 0.40 \\
 			\hline
 		\end{tabular}
 	\end{center}
